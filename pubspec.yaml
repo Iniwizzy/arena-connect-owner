@@ -1,0 +1,45 @@
+name: arena_connect
+description: "A new Flutter project."
+publish_to: "none"
+version: 0.1.0
+
+environment:
+    sdk: ^3.5.3
+
+dependencies:
+    flutter:
+        sdk: flutter
+    flutter_localizations: 
+        sdk: flutter
+    cached_network_image: ^3.3.0
+    flutter_svg: ^2.0.9
+
+dev_dependencies:
+    flutter_test:
+        sdk: flutter
+    flutter_lints: ^4.0.0
+
+flutter:
+    uses-material-design: true
+    assets:
+        - images/
+        - images/background-image.png
+        - images/arena-connect1.png
+
+    fonts:
+        - family: Kanit
+          fonts:
+              - asset: fonts/Kanit-Regular.ttf
+        - family: SourceSans3
+          fonts:
+              - asset: fonts/SourceSans3-Regular.ttf
+        - family: Poppins
+          fonts: 
+            - asset: fonts/PoppinsBold.ttf
+              weight: 700
+            - asset: fonts/PoppinsRegular.ttf
+              weight: 400
+            - asset: fonts/PoppinsMedium.ttf
+              weight: 500
+            - asset: fonts/PoppinsLight.ttf
+              weight: 300

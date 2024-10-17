@@ -11,7 +11,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0XFFFFFFFF),
+        backgroundColor: const Color(0XFFFFFFFF),
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -19,18 +19,18 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
             children: [
               _buildAppBar(context),
               _buildCourtSelection(context),
-              SizedBox(height: 12),
+              const SizedBox(height: 12),
               Expanded(
                 child: Container(
                   width: 332,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(left: 6),
                         child: Text(
                           "Kamis, 19 September 2024",
@@ -42,7 +42,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 14),
+                      const SizedBox(height: 14),
                       _buildScheduleList(context)
                     ],
                   ),
@@ -64,7 +64,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
       automaticallyImplyLeading: false,
       leadingWidth: 29,
       leading: Padding(
-        padding: EdgeInsets.only(left: 21),
+        padding: const EdgeInsets.only(left: 21),
         child: SizedBox(
           height: 16,
           width: 8,
@@ -73,7 +73,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
           ),
         ),
       ),
-      title: Padding(
+      title: const Padding(
         padding: EdgeInsets.only(left: 26),
         child: Text(
           "Detail Jadwal",
@@ -92,12 +92,12 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
   Widget _buildCourtSelection(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.only(
+      padding: const EdgeInsets.only(
         left: 20,
         top: 16,
         bottom: 16,
       ),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0XFFFFFFFF),
         boxShadow: [
           BoxShadow(
@@ -122,7 +122,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 elevation: 0,
-                backgroundColor: Color(0XFF12215C),
+                backgroundColor: const Color(0XFF12215C),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(
                     6,
@@ -132,14 +132,14 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
                   vertical: -4,
                   horizontal: -4,
                 ),
-                padding: EdgeInsets.only(left: 10),
+                padding: const EdgeInsets.only(left: 10),
               ),
               onPressed: () {},
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Lapangan badminton 1",
                     style: TextStyle(
                       color: Color(0XFFFFFFFF),
@@ -149,7 +149,7 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
                     child: SvgPicture.asset(
                       "assets/images/img_mynauiarrowupdown.svg",
                       height: 16,
@@ -171,16 +171,16 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
     return Expanded(
       child: ListView.separated(
         padding: EdgeInsets.zero,
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         separatorBuilder: (context, index) {
-          return SizedBox(
+          return const SizedBox(
             height: 14,
           );
         },
         itemCount: 14,
         itemBuilder: (context, index) {
-          return SchedulelistItemWidget();
+          return const SchedulelistItemWidget();
         },
       ),
     );
@@ -208,9 +208,9 @@ class SchedulelistItemWidget extends StatelessWidget {
                 Container(
                   height: 10,
                   width: 10,
-                  margin: EdgeInsets.only(top: 4),
+                  margin: const EdgeInsets.only(top: 4),
                   decoration: BoxDecoration(
-                    color: Color(0XFFEB0707),
+                    color: const Color(0XFFEB0707),
                     borderRadius: BorderRadius.circular(
                       5,
                     ),
@@ -221,8 +221,8 @@ class SchedulelistItemWidget extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Container(
                       width: double.maxFinite,
-                      padding: EdgeInsets.only(left: 12),
-                      child: Column(
+                      padding: const EdgeInsets.only(left: 12),
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
@@ -253,15 +253,15 @@ class SchedulelistItemWidget extends StatelessWidget {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 4),
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          margin: const EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: Color(0XFF12215C),
+            color: const Color(0XFF12215C),
             borderRadius: BorderRadius.circular(
               5,
             ),
           ),
-          child: Text(
+          child: const Text(
             "Lapangan Badminton 1",
             textAlign: TextAlign.center,
             style: TextStyle(

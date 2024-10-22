@@ -1,10 +1,14 @@
+// import 'package:arena_connect/authentication/auth_service.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final String title;
+
+  const HomeScreen({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
+    // final auth = AuthService();
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -37,7 +41,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const Center(
                     child: Text(
-                      "Welcome to\nArena Connect",
+                      "Welcome to\n Arena Connect",
                       style: TextStyle(
                           fontFamily: "Kanit",
                           color: Color(0xFF12215C),

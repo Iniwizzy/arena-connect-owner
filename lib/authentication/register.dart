@@ -1,3 +1,5 @@
+// import 'package:arena_connect/authentication/login.dart';
+// import 'package:arena_connect/beranda/beranda_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,8 @@ class RegisterPage extends StatefulWidget {
 
 class RegisterPageState extends State<RegisterPage> {
   bool _isPasswordObscured = true;
+
+  // final
 
   @override
   Widget build(BuildContext context) {

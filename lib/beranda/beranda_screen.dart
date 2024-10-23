@@ -9,6 +9,7 @@ class BerandaScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: const Color(0XFFFFFFFF),
+        // decoration:BoxDecoration(borderRadius: BorderRadius.circular(30));
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -411,21 +412,18 @@ Widget _buildNavigationList(BuildContext context) {
     children: [
       Column(
         children: [
-          TextButton(
-            onPressed: () {
+          InkWell(
+            onTap: () {
               Navigator.pushNamed(context, '/daftarlapang');
             },
-            style: TextButton.styleFrom(
-              padding: EdgeInsets
-                  .zero, // Menghilangkan padding default pada TextButton
-              minimumSize: const Size(40, 40), // Mengatur ukuran minimal button
-            ),
             child: Column(
               children: [
-                SvgPicture.asset(
-                  "images/lapangan_icon.svg",
+                SizedBox(
                   height: 46,
                   width: 46,
+                  child: SvgPicture.asset(
+                    "images/lapangan_icon.svg",
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Text(
@@ -437,35 +435,81 @@ Widget _buildNavigationList(BuildContext context) {
           ),
         ],
       ),
+      // Column(
+      //   children: [
+      //     TextButton(
+      //       onPressed: () {
+      //         Navigator.pushNamed(context, '/daftarlapang');
+      //       },
+      //       style: TextButton.styleFrom(
+      //         padding: EdgeInsets
+      //             .zero, // Menghilangkan padding default pada TextButton
+      //         minimumSize: const Size(40, 40), // Mengatur ukuran minimal button
+      //       ),
+      //       child: Column(
+      //         children: [
+      //           SvgPicture.asset(
+      //             "images/lapangan_icon.svg",
+      //             height: 46,
+      //             width: 46,
+      //           ),
+      //           const SizedBox(height: 6),
+      //           Text(
+      //             "Lapangan",
+      //             style: superFont2.copyWith(color: Colors.black),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
       Column(
         children: [
-          SizedBox(
-            height: 46,
-            width: 46,
-            child: SvgPicture.asset(
-              "images/calendar_icon.svg",
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/kalender');
+            },
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: SvgPicture.asset(
+                    "images/calendar_icon.svg",
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Kalender",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            "Kalender",
-            style: superFont2.copyWith(color: Colors.black),
           ),
         ],
       ),
       Column(
         children: [
-          SizedBox(
-            height: 46,
-            width: 46,
-            child: SvgPicture.asset(
-              "images/kompetisi_icon.svg",
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/kompetisi');
+            },
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: SvgPicture.asset(
+                    "images/kompetisi_icon.svg",
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Kompetisi",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            "Kompetisi",
-            style: superFont2.copyWith(color: Colors.black),
           ),
         ],
       ),

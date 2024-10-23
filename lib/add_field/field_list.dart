@@ -126,7 +126,7 @@ class ListLapang extends StatelessWidget {
         padding: const EdgeInsets.only(top: 130, right: 20, left: 20),
         child: Column(children: [
           Center(
-            child: Image.asset('assets/images/Add File.png'),
+            child: Image.asset('images/add-file.png'),
           ),
           const SizedBox(height: 16),
           Column(

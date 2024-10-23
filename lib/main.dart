@@ -1,3 +1,4 @@
+import 'package:arena_connect/add_field/field_list.dart';
 import 'package:arena_connect/authentication/login.dart';
 import 'package:arena_connect/homescreen.dart';
 import 'package:flutter/material.dart';
@@ -16,13 +17,14 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primaryColor: Colors.white),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(),
-        '/beranda': (context) => const BerandaScreen(),
-      },
+      // initialRoute: '/',
+      // routes: {
+      //   '/': (context) => const HomeScreen(),
+      //   '/login': (context) => const LoginPage(),
+      //   '/register': (context) => const RegisterPage(),
+      //   '/beranda': (context) => const BerandaScreen(),
+      // },
+      home: const ListLapang(),
     );
   }
 }

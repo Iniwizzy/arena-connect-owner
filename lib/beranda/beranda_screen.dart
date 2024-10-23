@@ -202,25 +202,25 @@ class BerandaScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildNavigationList(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 22),
-      width: double.maxFinite,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Wrap(
-          direction: Axis.horizontal,
-          spacing: 36,
-          children: List.generate(
-            1,
-            (index) {
-              return const NavigationlistItemWidget();
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildNavigationList(BuildContext context) {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 22),
+  //     width: double.maxFinite,
+  //     child: SingleChildScrollView(
+  //       scrollDirection: Axis.horizontal,
+  //       child: Wrap(
+  //         direction: Axis.horizontal,
+  //         spacing: 36,
+  //         children: List.generate(
+  //           1,
+  //           (index) {
+  //             return const NavigationlistItemWidget();
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildActivitySummary(BuildContext context) {
@@ -323,6 +323,7 @@ class BerandaScreen extends StatelessWidget {
       selectedItemColor: Colors.blue[900],
       unselectedItemColor: Colors.grey,
       currentIndex: 0, // Mengatur tab Profil yang terpilih
+
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -397,47 +398,77 @@ class BerandaScreen extends StatelessWidget {
   }
 }
 
-class NavigationlistItemWidget extends StatelessWidget {
-  const NavigationlistItemWidget({super.key});
+Widget _buildNavigationList(BuildContext context) {
+  TextStyle superFont2 = const TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 60,
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 46,
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/daftarlapang');
-                  },
-                  child: SvgPicture.asset(
-                    "images/img_daftar_lapangan.svg",
-                  ),
+  return Row(
+    mainAxisAlignment:
+        MainAxisAlignment.spaceEvenly, // Mengatur jarak antar item
+    children: [
+      Column(
+        children: [
+          TextButton(
+            onPressed: () {
+              Navigator.pushNamed(context, '/daftarlapang');
+            },
+            style: TextButton.styleFrom(
+              padding: EdgeInsets
+                  .zero, // Menghilangkan padding default pada TextButton
+              minimumSize: const Size(40, 40), // Mengatur ukuran minimal button
+            ),
+            child: Column(
+              children: [
+                SvgPicture.asset(
+                  "images/lapangan_icon.svg",
+                  height: 46,
+                  width: 46,
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  "Lapangan",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 6),
-        const Text(
-          "Lapangan",
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: Color(0XFF000000),
-            fontSize: 12,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w400,
+        ],
+      ),
+      Column(
+        children: [
+          SizedBox(
+            height: 46,
+            width: 46,
+            child: SvgPicture.asset(
+              "images/calendar_icon.svg",
+            ),
           ),
-        ),
-        // ], children: const [
-        //   Padding(padding: EdgeInsets.symmetric())
-      ]),
-    );
-  }
+          const SizedBox(height: 6),
+          Text(
+            "Kalender",
+            style: superFont2.copyWith(color: Colors.black),
+          ),
+        ],
+      ),
+      Column(
+        children: [
+          SizedBox(
+            height: 46,
+            width: 46,
+            child: SvgPicture.asset(
+              "images/kompetisi_icon.svg",
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            "Kompetisi",
+            style: superFont2.copyWith(color: Colors.black),
+          ),
+        ],
+      ),
+    ],
+  );
 }

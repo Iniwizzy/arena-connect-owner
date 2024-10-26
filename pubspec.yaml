@@ -13,6 +13,8 @@ dependencies:
         sdk: flutter
     cached_network_image: ^3.3.0
     flutter_svg: ^2.0.9
+    google_fonts: ^6.2.1
+    calendar_date_picker2: ^1.1.7
 
 dev_dependencies:
     flutter_test:

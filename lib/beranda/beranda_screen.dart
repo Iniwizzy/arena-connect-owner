@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BerandaScreen extends StatelessWidget {
-  const BerandaScreen({Key? key})
-      : super(
-          key: key,
-        );
+  const BerandaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0XFFFFFFFF),
+        backgroundColor: const Color(0XFFFFFFFF),
+        // decoration:BoxDecoration(borderRadius: BorderRadius.circular(30));
         body: SizedBox(
           width: double.maxFinite,
           child: Column(
@@ -21,39 +19,37 @@ class BerandaScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Container(
                     width: double.maxFinite,
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                       left: 32,
                       top: 34,
                       right: 32,
                     ),
                     decoration: BoxDecoration(
-                      color: Color(0XFFFFFFFF),
-                      borderRadius: BorderRadius.circular(
-                        30,
-                      ),
+                      color: const Color(0XFFFFFFFF),
+                      borderRadius: BorderRadius.circular(30),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildNavigationList(context),
-                        SizedBox(height: 38),
+                        const SizedBox(height: 38),
                         _buildActivitySummary(context),
-                        SizedBox(height: 38),
+                        const SizedBox(height: 38),
                         Align(
                           alignment: Alignment.center,
                           child: Container(
                             height: 74,
                             width: 233,
-                            margin: EdgeInsets.symmetric(horizontal: 30),
-                            padding: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(horizontal: 30),
+                            padding: const EdgeInsets.symmetric(
                               horizontal: 12,
                               vertical: 10,
                             ),
                             decoration: BoxDecoration(
-                              color: Color(0xFF12215C),
+                              color: const Color(0xFF12215C),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: Column(
+                            child: const Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -85,12 +81,12 @@ class BerandaScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: 96)
+                        const SizedBox(height: 96)
                       ],
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -103,8 +99,8 @@ class BerandaScreen extends StatelessWidget {
   Widget _buildHeaderSection(BuildContext context) {
     return Container(
       width: double.maxFinite,
-      padding: EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: const BoxDecoration(
         color: Color(0XFF12215C),
       ),
       child: Column(
@@ -115,7 +111,7 @@ class BerandaScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 14),
+                  padding: const EdgeInsets.only(left: 14),
                   child: Image.asset(
                     "images/img_logopng2_1.png",
                     height: 26,
@@ -123,11 +119,11 @@ class BerandaScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 22),
+                  padding: const EdgeInsets.only(right: 22),
                   child: Row(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: const EdgeInsets.only(left: 20),
                         child: SizedBox(
                           height: 21,
                           width: 57,
@@ -137,7 +133,7 @@ class BerandaScreen extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                           left: 19,
                           right: 22,
                         ),
@@ -155,16 +151,16 @@ class BerandaScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 36),
+          const SizedBox(height: 36),
           Container(
             width: double.maxFinite,
-            margin: EdgeInsets.symmetric(horizontal: 32),
-            padding: EdgeInsets.only(left: 14),
+            margin: const EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.only(left: 14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RichText(
-                  text: TextSpan(
+                  text: const TextSpan(
                     children: [
                       TextSpan(
                         text: "Hi",
@@ -188,7 +184,7 @@ class BerandaScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                Text(
+                const Text(
                   "Selamat datang",
                   style: TextStyle(
                     color: Color(0XFFFFFFFF),
@@ -196,36 +192,36 @@ class BerandaScreen extends StatelessWidget {
                     fontFamily: 'Poppins',
                     fontWeight: FontWeight.w400,
                   ),
-                )
+                ),
               ],
             ),
           ),
-          SizedBox(height: 8)
+          const SizedBox(height: 8),
         ],
       ),
     );
   }
 
   /// Section Widget
-  Widget _buildNavigationList(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 22),
-      width: double.maxFinite,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Wrap(
-          direction: Axis.horizontal,
-          spacing: 36,
-          children: List.generate(
-            1,
-            (index) {
-              return NavigationlistItemWidget();
-            },
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildNavigationList(BuildContext context) {
+  //   return Container(
+  //     margin: const EdgeInsets.symmetric(horizontal: 22),
+  //     width: double.maxFinite,
+  //     child: SingleChildScrollView(
+  //       scrollDirection: Axis.horizontal,
+  //       child: Wrap(
+  //         direction: Axis.horizontal,
+  //         spacing: 36,
+  //         children: List.generate(
+  //           1,
+  //           (index) {
+  //             return const NavigationlistItemWidget();
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Section Widget
   Widget _buildActivitySummary(BuildContext context) {
@@ -234,7 +230,7 @@ class BerandaScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          const Text(
             "Ringkasan Aktivitas",
             style: TextStyle(
               color: Color(0XFF000000),
@@ -243,7 +239,7 @@ class BerandaScreen extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          Text(
+          const Text(
             "Aktivitas penyewaan 30 hari terakhir",
             style: TextStyle(
               color: Color(0XFFA7ADC3),
@@ -252,7 +248,7 @@ class BerandaScreen extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           SizedBox(
             width: double.maxFinite,
             child: Row(
@@ -264,24 +260,24 @@ class BerandaScreen extends StatelessWidget {
                     transactionAmount: "0",
                   ),
                 ),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Expanded(
                   child: _buildTransactionSummary(
                     context,
                     transactionMessage: "Transaksi Berhasil",
                     transactionAmount: "0",
                   ),
-                )
+                ),
               ],
             ),
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
           SizedBox(
             width: double.maxFinite,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
+                const Align(
                   alignment: Alignment.center,
                   child: Text(
                     "Riwayat Pemesanan",
@@ -293,8 +289,8 @@ class BerandaScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Spacer(),
-                Text(
+                const Spacer(),
+                const Text(
                   "Lihat Semua",
                   style: TextStyle(
                     color: Color(0XFF000000),
@@ -304,10 +300,7 @@ class BerandaScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    left: 6,
-                    top: 4,
-                  ),
+                  padding: const EdgeInsets.only(left: 6, top: 4),
                   child: SizedBox(
                     height: 12,
                     width: 8,
@@ -315,21 +308,45 @@ class BerandaScreen extends StatelessWidget {
                       "images/img_vector_12x6.svg",
                     ),
                   ),
-                )
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
-  /// Section Widget
+  /// Bottom Navigation Bar
   Widget _buildBottomNavigation(BuildContext context) {
-    return SizedBox(
-      height: 64,
-      width: double.maxFinite,
-      child: SizedBox(),
+    return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
+      selectedItemColor: Colors.blue[900],
+      unselectedItemColor: Colors.grey,
+      currentIndex: 0, // Mengatur tab Profil yang terpilih
+
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: "Beranda",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.book),
+          label: "Pemesanan",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.payments_sharp),
+          label: "Pembayaran",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.bar_chart),
+          label: "Laporan",
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: "Profil",
+        ),
+      ],
     );
   }
 
@@ -340,26 +357,17 @@ class BerandaScreen extends StatelessWidget {
     required String transactionAmount,
   }) {
     return Container(
-      padding: EdgeInsets.only(
-        left: 8,
-        top: 4,
-        bottom: 4,
-      ),
+      padding: const EdgeInsets.only(left: 8, top: 4, bottom: 4),
       decoration: BoxDecoration(
-        color: Color(0XFFFFFFFF),
-        borderRadius: BorderRadius.circular(
-          6,
-        ),
-        boxShadow: [
+        color: const Color(0XFFFFFFFF),
+        borderRadius: BorderRadius.circular(6),
+        boxShadow: const [
           BoxShadow(
             color: Color(0X11000000),
             spreadRadius: 2,
             blurRadius: 2,
-            offset: Offset(
-              0,
-              4,
-            ),
-          )
+            offset: Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
@@ -368,7 +376,7 @@ class BerandaScreen extends StatelessWidget {
         children: [
           Text(
             transactionMessage,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0XFF000000),
               fontSize: 12,
               fontFamily: 'Poppins',
@@ -377,55 +385,134 @@ class BerandaScreen extends StatelessWidget {
           ),
           Text(
             transactionAmount,
-            style: TextStyle(
+            style: const TextStyle(
               color: Color(0XFF000000),
               fontSize: 15,
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w700,
             ),
           ),
-          SizedBox(height: 14)
+          const SizedBox(height: 14),
         ],
       ),
     );
   }
 }
 
-class NavigationlistItemWidget extends StatelessWidget {
-  const NavigationlistItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+Widget _buildNavigationList(BuildContext context) {
+  TextStyle superFont2 = const TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 60,
-      child: Column(
+  return Row(
+    mainAxisAlignment:
+        MainAxisAlignment.spaceEvenly, // Mengatur jarak antar item
+    children: [
+      Column(
         children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 6),
-            child: SizedBox(
-              height: 46,
-              width: double.maxFinite,
-              child: SvgPicture.asset(
-                "images/img_daftar_lapangan.svg",
-              ),
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/daftarlapang');
+            },
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: SvgPicture.asset(
+                    "images/lapangan_icon.svg",
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Lapangan",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 6),
-          Text(
-            "Lapangan",
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              color: Color(0XFF000000),
-              fontSize: 12,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-            ),
-          )
         ],
       ),
-    );
-  }
+      // Column(
+      //   children: [
+      //     TextButton(
+      //       onPressed: () {
+      //         Navigator.pushNamed(context, '/daftarlapang');
+      //       },
+      //       style: TextButton.styleFrom(
+      //         padding: EdgeInsets
+      //             .zero, // Menghilangkan padding default pada TextButton
+      //         minimumSize: const Size(40, 40), // Mengatur ukuran minimal button
+      //       ),
+      //       child: Column(
+      //         children: [
+      //           SvgPicture.asset(
+      //             "images/lapangan_icon.svg",
+      //             height: 46,
+      //             width: 46,
+      //           ),
+      //           const SizedBox(height: 6),
+      //           Text(
+      //             "Lapangan",
+      //             style: superFont2.copyWith(color: Colors.black),
+      //           ),
+      //         ],
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/kalender');
+            },
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: SvgPicture.asset(
+                    "images/calendar_icon.svg",
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Kalender",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      Column(
+        children: [
+          InkWell(
+            onTap: () {
+              Navigator.pushNamed(context, '/kompetisi');
+            },
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 46,
+                  width: 46,
+                  child: SvgPicture.asset(
+                    "images/kompetisi_icon.svg",
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  "Kompetisi",
+                  style: superFont2.copyWith(color: Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ],
+  );
 }

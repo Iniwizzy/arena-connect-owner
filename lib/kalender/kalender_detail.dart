@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:arena_connect/config/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class KalenderDetailJadwalScreen extends StatelessWidget {
@@ -60,31 +61,21 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
     return AppBar(
       elevation: 0,
       toolbarHeight: 74,
-      backgroundColor: Colors.blue[900],
-      automaticallyImplyLeading: false,
-      leadingWidth: 29,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 21),
-        child: SizedBox(
-          height: 16,
-          width: 8,
-          child: SvgPicture.asset(
-            "assets/images/img_arrow_left.svg",
-          ),
+      backgroundColor: Color(0XFF12215C),
+      automaticallyImplyLeading: false, // Menghindari ikon back default
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      ),
+      title: Text(
+        'Detail Jadwal',
+        style: notifikasiStyle.copyWith(
+          color: Colors.white, // Warna teks putih untuk konsistensi
         ),
       ),
-      title: const Padding(
-        padding: EdgeInsets.only(left: 26),
-        child: Text(
-          "Detail Jadwal",
-          style: TextStyle(
-            color: Color(0XFFFFFFFF),
-            fontSize: 20,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
+      centerTitle: true, // Agar judul berada di tengah
     );
   }
 

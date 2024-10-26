@@ -27,6 +27,7 @@ flutter:
         - images/
         - images/background-image.png
         - images/arena-connect1.png
+        - images/add-file.png
 
     fonts:
         - family: Kanit

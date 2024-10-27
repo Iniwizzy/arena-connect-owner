@@ -309,3 +309,10 @@ ButtonStyle shortButton2 = ElevatedButton.styleFrom(
       borderRadius: BorderRadius.circular(5),
     ),
     padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20));
+
+TextStyle cariStyle = TextStyle(
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 12,
+);

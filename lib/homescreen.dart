@@ -41,12 +41,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                   const Center(
                     child: Text(
-                      "Welcome to\n Arena Connect",
+                      "  Welcome to"
+                      "\nArena Connect ",
                       style: TextStyle(
                           fontFamily: "Kanit",
                           color: Color(0xFF12215C),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20),
+                          fontWeight: FontWeight.w700,
+                          fontSize: 31),
                     ),
                   )
                 ],

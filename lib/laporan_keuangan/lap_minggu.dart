@@ -270,11 +270,11 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
             label: 'Beranda',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.book),
+            icon: Icon(Icons.list_alt),
             label: 'Pemesanan',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.payment_sharp),
+            icon: Icon(Icons.payment),
             label: 'Pembayaran',
           ),
           BottomNavigationBarItem(

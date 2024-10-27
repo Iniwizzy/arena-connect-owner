@@ -256,32 +256,120 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        selectedItemColor: const Color(0xFF0D2C76),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
+      bottomNavigationBar:
+          CustomBottomNavigationBar(), // Pisah bottom navigation
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: 3,
+      //   selectedItemColor: const Color(0xFF0D2C76),
+      //   unselectedItemColor: Colors.grey,
+      //   showSelectedLabels: true,
+      //   showUnselectedLabels: true,
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Beranda',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.list_alt),
+      //       label: 'Pemesanan',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.payment),
+      //       label: 'Pembayaran',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.bar_chart),
+      //       label: 'Laporan',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.person),
+      //       label: 'Profil',
+      //     ),
+      //   ],
+      // ),
+    );
+  }
+}
+
+class CustomBottomNavigationBar extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(
+          vertical: 16), // Opsional untuk memberi padding di sekitar tombol
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          InkWell(
+            onTap: () {
+              // Aksi ketika ikon Beranda diklik
+              Navigator.pushNamed(context, '/home');
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.home, color: Colors.grey),
+                SizedBox(height: 4),
+                Text("Beranda", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Pemesanan',
+          InkWell(
+            onTap: () {
+              // Aksi ketika ikon Pemesanan diklik
+              ;
+              Navigator.pushNamed(context, '/pemesanan');
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.book, color: Colors.grey),
+                SizedBox(height: 4),
+                Text("Pemesanan", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: 'Pembayaran',
+          InkWell(
+            onTap: () {
+              // Aksi ketika ikon Pembayaran diklik
+              Navigator.pushNamed(context, '/pembayaran');
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.payments_sharp, color: Colors.grey),
+                SizedBox(height: 4),
+                Text("Pembayaran", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Laporan',
+          InkWell(
+            onTap: () {
+              // Aksi ketika ikon Laporan diklik
+              Navigator.pushNamed(context, '/laporan');
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.bar_chart, color: Color(0xFF0D2C76)),
+                SizedBox(height: 4),
+                Text("Laporan", style: TextStyle(color: Color(0xFF0D2C76))),
+              ],
+            ),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
+          InkWell(
+            onTap: () {
+              // Aksi ketika ikon Profil diklik
+              Navigator.pushNamed(context, '/profil');
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.person, color: Colors.grey),
+                SizedBox(height: 4),
+                Text("Profil", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
         ],
       ),

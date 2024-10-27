@@ -321,7 +321,7 @@ class BerandaScreen extends StatelessWidget {
   Widget _buildBottomNavigation(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.blue[900],
+      selectedItemColor: const Color(0xFF0D2C76),
       unselectedItemColor: Colors.grey,
       currentIndex: 0, // Mengatur tab Profil yang terpilih
 

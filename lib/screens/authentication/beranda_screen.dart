@@ -98,7 +98,7 @@ class BerandaScreen extends StatelessWidget {
       ),
     );
   }
-
+}
   /// Section Widget
   Widget _buildHeaderSection(BuildContext context) {
     return Container(
@@ -389,7 +389,7 @@ class BerandaScreen extends StatelessWidget {
       ),
     );
   }
-}
+
 
 class NavigationlistItemWidget extends StatelessWidget {
   const NavigationlistItemWidget({Key? key})

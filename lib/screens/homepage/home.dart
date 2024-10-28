@@ -130,7 +130,9 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      bottomNavigationBar: _BottomNavigation(context),
+      bottomNavigationBar: 
+    _BottomNavigation(context),
+      
     );
   }
 }
@@ -376,9 +378,9 @@ Widget _BottomNavigation(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _bottomNavItem(context, '/home', Icons.home, "Beranda", true),
-        _bottomNavItem(context, '/pesanan', Icons.book, "Pemesanan", false),
+        _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
         _bottomNavItem(
-            context, '/pembayaran', Icons.payments_sharp, "Pembayaran", false),
+            context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
         _bottomNavItem(
             context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
         _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
@@ -395,12 +397,18 @@ Widget _bottomNavItem(BuildContext context, String route, IconData icon,
     },
     child: Column(
       mainAxisSize: MainAxisSize.min,
+      
       children: [
         Icon(icon, color: isActive ? Color(0xFF0D2C76) : Colors.grey),
         SizedBox(height: 4),
-        Text(label,
-            style:
-                TextStyle(color: isActive ? Color(0xFF0D2C76) : Colors.grey)),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Poppins', // Mengatur font menjadi Poppins
+            fontSize: 12,
+            color: isActive ? Color(0xFF0D2C76) : Colors.grey,
+          ),
+        )
       ],
     ),
   );

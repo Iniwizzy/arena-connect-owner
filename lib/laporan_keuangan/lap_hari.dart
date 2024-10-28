@@ -88,8 +88,8 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                 const Text(
                   'Selasa, 12 Oktober 2024',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                     color: Color(0xFF12215C),
                     letterSpacing: 1.0,
                   ),

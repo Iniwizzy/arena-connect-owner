@@ -15,11 +15,13 @@ dependencies:
     flutter_svg: ^2.0.9
     google_fonts: ^6.2.1
     calendar_date_picker2: ^1.1.7
+    device_preview: ^1.2.0
+    
 
 dev_dependencies:
     flutter_test:
         sdk: flutter
-    flutter_lints: ^4.0.0
+    flutter_lints: ^5.0.0
 
 flutter:
     uses-material-design: true

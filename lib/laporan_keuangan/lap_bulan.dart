@@ -3,18 +3,18 @@ import 'package:arena_connect/laporan_keuangan/daily.dart'; // Pastikan path ini
 import 'package:intl/date_symbol_data_local.dart'; // Perbaikan untuk intl
 import 'package:intl/intl.dart';
 import 'lap_minggu.dart';
-import 'lap_bulan.dart';
+import 'lap_hari.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting(
       'id_ID', null); // Inisialisasi untuk format lokal ID
 
-  runApp(const LapHari());
+  runApp(const LapBulan());
 }
 
-class LapHari extends StatelessWidget {
-  const LapHari({super.key});
+class LapBulan extends StatelessWidget {
+  const LapBulan({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,25 +40,36 @@ class LaporanKeuanganScreen extends StatefulWidget {
 }
 
 class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
-  final int pendapatanLapangan1 = 360000;
-  final int pendapatanLapangan2 = 250000;
-  final int pendapatanLapangan3 = 320000;
+  final int pendapatanLapangan1 = 2800000;
+  final int pendapatanLapangan2 = 2800000;
+  final int pendapatanLapangan3 = 2800000;
+  final int pendapatanLapangan4 = 2800000;
 
-  String selectedPeriod = 'Hari';
+  String selectedPeriod = 'Bulan';
   DateTime currentDate =
       DateTime.now(); // Variabel untuk menyimpan tanggal saat ini
 
   // Fungsi untuk mengubah nama hari dan bulan menjadi bahasa Indonesia
-  String formatDate(DateTime date) {
-    final formatter = DateFormat('EEEE, dd MMMM yyyy',
-        'id_ID'); // Format tanggal dengan locale Indonesia
-    return formatter.format(date);
-  } // Variabel untuk mengatur pilihan periode
+  String formatMonth(DateTime date) {
+    // Cari tanggal awal minggu (Senin)
+    DateTime startOfWeek =
+        date.subtract(Duration(days: date.weekday - 1)); // Senin
+
+    // Format bulan dan tahun untuk tanggal awal minggu
+    final formatter = DateFormat('MMMM yyyy', 'id_ID');
+    String startMonth = formatter.format(startOfWeek);
+
+    // Mengembalikan bulan dan tahun yang diformat
+    return startMonth; // Hanya menampilkan satu bulan
+  }
 
   @override
   Widget build(BuildContext context) {
-    final int totalPendapatanHariIni =
-        pendapatanLapangan1 + pendapatanLapangan2 + pendapatanLapangan3;
+    final int totalPendapatanHariIni = 
+        pendapatanLapangan1 +
+        pendapatanLapangan2 +
+        pendapatanLapangan3 +
+        pendapatanLapangan4;
 
     return Scaffold(
       appBar: AppBar(
@@ -93,14 +104,14 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                   onPressed: () {
                     // Aksi saat previous ditekan
                     setState(() {
-                      currentDate =
-                          currentDate.subtract(const Duration(days: 1));
+                      currentDate = currentDate =
+                          DateTime(currentDate.year, currentDate.month - 1, 1);
                     });
                   },
                 ),
                 const Spacer(),
                 Text(
-                  formatDate(currentDate),
+                  formatMonth(currentDate),
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
@@ -115,7 +126,8 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                   onPressed: () {
                     // Aksi saat next ditekan
                     setState(() {
-                      currentDate = currentDate.add(const Duration(days: 1));
+                      currentDate =
+                          DateTime(currentDate.year, currentDate.month + 1, 1);
                     });
                   },
                 ),
@@ -140,6 +152,13 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                     setState(() {
                       selectedPeriod = 'Hari';
                     });
+                    if (selected) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LapHari()), // Halaman tujuan
+                      );
+                    }
                   },
                   labelStyle: TextStyle(
                     color:
@@ -177,14 +196,6 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                     setState(() {
                       selectedPeriod = 'Bulan';
                     });
-                    if (selected) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                LapBulan()), // Halaman tujuan
-                      );
-                    }
                   },
                   labelStyle: TextStyle(
                     color:
@@ -205,83 +216,161 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
-                    lapanganName: 'Lapangan 1',
+                    lapanganName: '01 Oktober - 07 Oktober',
                     transaksi: [
                       {
-                        'jam': '08:00 - 09:00',
-                        'metode': 'BNI',
-                        'jumlah': 'Rp. 80.000'
+                        'jam': 'Senin',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '13:00 - 14:00',
-                        'metode': 'BSI',
-                        'jumlah': 'Rp. 80.000'
+                        'jam': 'Selasa',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {'jam': 'Rabu', 'metode': '20X', 'jumlah': 'Rp. 400.000'},
+                      {
+                        'jam': 'Kamis',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '20:00 - 21:00',
-                        'metode': 'BRI',
-                        'jumlah': 'Rp. 90.000'
+                        'jam': 'Jumat',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '20:00 - 21:00',
-                        'metode': 'BRI',
-                        'jumlah': 'Rp. 110.000'
+                        'jam': 'Sabtu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Minggu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 2.800.000',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
-                    lapanganName: 'Lapangan 2',
+                    lapanganName: '08 Oktober - 14 Oktober',
                     transaksi: [
                       {
-                        'jam': '09:00 - 10:00',
-                        'metode': 'BNI',
-                        'jumlah': 'Rp. 70.000'
+                        'jam': 'Senin',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '14:00 - 15:00',
-                        'metode': 'BSI',
-                        'jumlah': 'Rp. 85.000'
+                        'jam': 'Selasa',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {'jam': 'Rabu', 'metode': '20X', 'jumlah': 'Rp. 400.000'},
+                      {
+                        'jam': 'Kamis',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '21:00 - 22:00',
-                        'metode': 'BRI',
-                        'jumlah': 'Rp. 95.000'
+                        'jam': 'Jumat',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Sabtu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Minggu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                     ],
-                    totalPendapatan: 'Rp. 250.000',
+                    totalPendapatan: 'Rp. 2.800.000',
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
-                    lapanganName: 'Lapangan 3',
+                    lapanganName: '14 Oktober - 21 Oktober',
                     transaksi: [
                       {
-                        'jam': '07:00 - 08:00',
-                        'metode': 'BNI',
-                        'jumlah': 'Rp. 50.000'
+                        'jam': 'Senin',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '16:00 - 17:00',
-                        'metode': 'BSI',
-                        'jumlah': 'Rp. 70.000'
+                        'jam': 'Selasa',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {'jam': 'Rabu', 'metode': '20X', 'jumlah': 'Rp. 400.000'},
+                      {
+                        'jam': 'Kamis',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '19:00 - 20:00',
-                        'metode': 'BRI',
-                        'jumlah': 'Rp.100.000'
+                        'jam': 'Jumat',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                       {
-                        'jam': '20:00 - 21:00',
-                        'metode': 'BRI',
-                        'jumlah': 'Rp.100.000'
+                        'jam': 'Sabtu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Minggu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
                       },
                     ],
-                    totalPendapatan: 'Rp. 320.000',
+                    totalPendapatan: 'Rp. 2.800.000',
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: LapanganExpansionTile(
+                    lapanganName: '22 Oktober - 28 Oktober',
+                    transaksi: [
+                      {
+                        'jam': 'Senin',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Selasa',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {'jam': 'Rabu', 'metode': '20X', 'jumlah': 'Rp. 400.000'},
+                      {
+                        'jam': 'Kamis',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Jumat',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Sabtu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                      {
+                        'jam': 'Minggu',
+                        'metode': '20X',
+                        'jumlah': 'Rp. 400.000'
+                      },
+                    ],
+                    totalPendapatan: 'Rp. 2.800.000',
                   ),
                 ),
               ],
@@ -438,7 +527,7 @@ class TotalPendapatanKerenCard extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           const Text(
-            'Total Pendapatan Hari Ini',
+            'Total Pendapatan Bulan Ini',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,

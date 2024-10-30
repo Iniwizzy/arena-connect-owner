@@ -9,19 +9,20 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primary,
-      body: Column(
-        children: [
-          // Bagian Biru Atas
-          SizedBox(
-            height: 26,
-          ),
-          SizedBox(
-            height: 40,
+      appBar: PreferredSize(
+        preferredSize:
+            const Size.fromHeight(80), // Atur ukuran tinggi sesuai kebutuhan
+        child: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Padding(
+            padding:
+                const EdgeInsets.only(top: 45.0), // Memberikan padding atas
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 20),
                   child: Image.asset(
                     "images/img_logopng2_1.png",
                     height: 26,
@@ -34,28 +35,39 @@ class HomePage extends StatelessWidget {
                       onTap: () {
                         Navigator.pushNamed(context, '/search');
                       },
+                      borderRadius: BorderRadius.circular(50),
+                      highlightColor: white.withOpacity(0.2),
+                      splashColor: white.withOpacity(0.2),
                       child: SizedBox(
-                        height: 21,
-                        child: Image.asset("images/search.png"),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.search, size: 25, color: Colors.white),
                       ),
                     ),
-                    SizedBox(width: 25),
                     InkWell(
                       onTap: () {
                         Navigator.pushNamed(context, '/notifikasi');
                       },
+                      borderRadius: BorderRadius.circular(50),
+                      highlightColor: white.withOpacity(0.2),
+                      splashColor: white.withOpacity(0.2),
                       child: SizedBox(
-                        height: 21,
-                        child: Image.asset("images/img_notif.png"),
+                        height: 45,
+                        width: 45,
+                        child: Icon(Icons.notifications, size: 25, color: Colors.white),
                       ),
                     ),
-                    SizedBox(width: 25),
+                    const SizedBox(width: 25),
                   ],
                 )
               ],
             ),
           ),
-          SizedBox(height: 45),
+        ),
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 15),
           Container(
               padding: EdgeInsets.only(left: 47),
               child: Align(
@@ -106,20 +118,21 @@ class HomePage extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  SizedBox(height: 38),
+                  SizedBox(height: 30),
                   _listBar(context),
-                  SizedBox(height: 38),
+                  SizedBox(height: 30),
                   _ringkasan(context),
-                  SizedBox(height: 38),
+                  SizedBox(height: 30),
                   _pemesanan(context),
-                  SizedBox(height: 150),
-                  _BottomNavigation(context),
                 ],
               ),
             ),
           )
         ],
       ),
+      bottomNavigationBar: 
+    _BottomNavigation(context),
+      
     );
   }
 }
@@ -365,9 +378,9 @@ Widget _BottomNavigation(BuildContext context) {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _bottomNavItem(context, '/home', Icons.home, "Beranda", true),
-        _bottomNavItem(context, '/pesanan', Icons.book, "Pemesanan", false),
+        _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
         _bottomNavItem(
-            context, '/pembayaran', Icons.payments_sharp, "Pembayaran", false),
+            context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
         _bottomNavItem(
             context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
         _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
@@ -384,97 +397,19 @@ Widget _bottomNavItem(BuildContext context, String route, IconData icon,
     },
     child: Column(
       mainAxisSize: MainAxisSize.min,
+      
       children: [
         Icon(icon, color: isActive ? Color(0xFF0D2C76) : Colors.grey),
         SizedBox(height: 4),
-        Text(label,
-            style:
-                TextStyle(color: isActive ? Color(0xFF0D2C76) : Colors.grey)),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Poppins', // Mengatur font menjadi Poppins
+            fontSize: 12,
+            color: isActive ? Color(0xFF0D2C76) : Colors.grey,
+          ),
+        )
       ],
     ),
   );
 }
-
-// Widget _BottomNavigation(BuildContext context) {
-//   return Container(
-//     color: Colors.white,
-//     padding: const EdgeInsets.symmetric(
-//         vertical: 10), // Opsional untuk memberi padding di sekitar tombol
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//       children: [
-//         InkWell(
-//           onTap: () {
-//             // Aksi ketika ikon Beranda diklik
-//             Navigator.pushNamed(context, '/home');
-//           },
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: const [
-//               Icon(Icons.home, color: Color(0xFF0D2C76)),
-//               SizedBox(height: 4),
-//               Text("Beranda", style: TextStyle(color: Color(0xFF0D2C76))),
-//             ],
-//           ),
-//         ),
-//         InkWell(
-//           onTap: () {
-//             // Aksi ketika ikon Pemesanan diklik
-//             ;
-//             Navigator.pushNamed(context, '/pemesanan');
-//           },
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: const [
-//               Icon(Icons.book, color: Colors.grey),
-//               SizedBox(height: 4),
-//               Text("Pemesanan", style: TextStyle(color: Colors.grey)),
-//             ],
-//           ),
-//         ),
-//         InkWell(
-//           onTap: () {
-//             // Aksi ketika ikon Pembayaran diklik
-//             Navigator.pushNamed(context, '/pembayaran');
-//           },
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: const [
-//               Icon(Icons.payments_sharp, color: Colors.grey),
-//               SizedBox(height: 4),
-//               Text("Pembayaran", style: TextStyle(color: Colors.grey)),
-//             ],
-//           ),
-//         ),
-//         InkWell(
-//           onTap: () {
-//             // Aksi ketika ikon Laporan diklik
-//             Navigator.pushNamed(context, '/laporankeuangan');
-//           },
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: const [
-//               Icon(Icons.bar_chart, color: Colors.grey),
-//               SizedBox(height: 4),
-//               Text("Laporan", style: TextStyle(color: Colors.grey)),
-//             ],
-//           ),
-//         ),
-//         InkWell(
-//           onTap: () {
-//             // Aksi ketika ikon Profil diklik
-//             Navigator.pushNamed(context, '/profil');
-//           },
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: const [
-//               Icon(Icons.person, color: Colors.grey),
-//               SizedBox(height: 4),
-//               Text("Profil", style: TextStyle(color: Colors.grey)),
-//             ],
-//           ),
-//         ),
-//       ],
-//     ),
-//   );
-// }

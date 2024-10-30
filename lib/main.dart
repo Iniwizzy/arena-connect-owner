@@ -3,7 +3,7 @@ import 'package:arena_connect/laporan_keuangan/lap_hari.dart';
 import 'package:arena_connect/pembayaran/pembayaran.dart';
 import 'package:arena_connect/pemesanan/pemesanan.dart';
 import 'package:flutter/material.dart';
-import 'package:arena_connect/authentication/login.dart';
+import 'package:arena_connect/authentication/login1.dart';
 import 'package:arena_connect/authentication/register.dart';
 import 'package:arena_connect/homescreen.dart';
 import 'package:arena_connect/beranda/beranda_screen.dart';
@@ -17,13 +17,14 @@ import 'package:arena_connect/profile/profil1.dart';
 import 'package:arena_connect/profile/editprofil.dart';
 // import 'package:arena_connect/laporan_keuangan/daily.dart';
 import 'package:arena_connect/beranda/home.dart';
+import 'package:device_preview/device_preview.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // await Firebase.initializeApp();
 
-  runApp(const MainApp());
+  runApp(DevicePreview(builder: (context) => const MainApp()));
 }
 
 class MainApp extends StatelessWidget {
@@ -52,7 +53,7 @@ class MainApp extends StatelessWidget {
         '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
         '/home': (context) => const HomePage(),
         '/pesanan': (context) => const PesananScreen(),
-        '/pembayaran': (context) => PembayaranScreen(),
+        '/pembayaran': (context) => PembayaranPage(),
       },
     );
   }

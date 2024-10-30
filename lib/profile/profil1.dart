@@ -3,19 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:arena_connect/config/theme.dart';
 import 'editprofil.dart'; // Import halaman edit profil
 
-class Profil extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ProfileScreen(),
-      theme: ThemeData(
-        textTheme:
-            GoogleFonts.poppinsTextTheme(), // Mengatur font menjadi Poppins
-      ),
-    );
-  }
-}
-
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -291,7 +278,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             onTap: () {
               // Aksi ketika ikon Pemesanan diklik
               ;
-              Navigator.pushNamed(context, '/pemesanan');
+              Navigator.pushNamed(context, '/pesanan');
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,

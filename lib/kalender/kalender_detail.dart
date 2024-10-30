@@ -2,67 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:arena_connect/config/theme.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class KalenderDetailJadwalScreen extends StatelessWidget {
-  const KalenderDetailJadwalScreen({Key? key})
-      : super(
-          key: key,
-        );
+class KalenderDetailJadwalScreen extends StatefulWidget {
+  const KalenderDetailJadwalScreen({Key? key}) : super(key: key);
+
+  @override
+  State<KalenderDetailJadwalScreen> createState() =>
+      _KalenderDetailJadwalScreenState();
+}
+
+class _KalenderDetailJadwalScreenState
+    extends State<KalenderDetailJadwalScreen> {
+  String selectedCourtType = 'badminton';
+  String selectedCourt = 'Lapangan Badminton 1';
+
+  final Map<String, List<String>> courtOptions = {
+    'badminton': ['Lapangan Badminton 1', 'Lapangan Badminton 2'],
+    'futsal': ['Lapangan Futsal 1', 'Lapangan Futsal 2'],
+  };
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: const Color(0XFFFFFFFF),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              _buildAppBar(context),
-              _buildCourtSelection(context),
-              const SizedBox(height: 12),
-              Expanded(
-                child: Container(
-                  width: 332,
-                  decoration: const BoxDecoration(
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 6),
-                        child: Text(
-                          "Kamis, 19 September 2024",
-                          style: TextStyle(
-                            color: Color(0XFF000000),
-                            fontSize: 14,
-                            fontFamily: 'Poppins',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 14),
-                      _buildScheduleList(context)
-                    ],
-                  ),
-                ),
-              )
-            ],
+    return Scaffold(
+      backgroundColor: const Color(0XFFFFFFFF),
+      appBar: _buildAppBar(context),
+      body: Column(
+        children: [
+          _buildCourtTypeSelection(context),
+          _buildCourtSelection(context),
+          Expanded(
+            child: _buildScheduleSection(context),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       elevation: 0,
-      toolbarHeight: 74,
-      backgroundColor: Color(0XFF12215C),
-      automaticallyImplyLeading: false, // Menghindari ikon back default
+      backgroundColor: const Color(0XFF12215C),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
         onPressed: () {
@@ -72,198 +50,239 @@ class KalenderDetailJadwalScreen extends StatelessWidget {
       title: Text(
         'Detail Jadwal',
         style: notifikasiStyle.copyWith(
-          color: Colors.white, // Warna teks putih untuk konsistensi
+          color: Colors.white,
         ),
       ),
-      centerTitle: true, // Agar judul berada di tengah
+      centerTitle: true,
     );
   }
 
-  /// Section Widget
+  Widget _buildCourtTypeSelection(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            _buildCourtTypeButton('badminton', 'Badminton'),
+            const SizedBox(width: 12),
+            _buildCourtTypeButton('futsal', 'Futsal'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCourtTypeButton(String type, String label) {
+    final isSelected = selectedCourtType == type;
+    return Expanded(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 0,
+          backgroundColor: isSelected ? const Color(0XFF12215C) : Colors.white,
+          side: BorderSide(
+            color: const Color(0XFF12215C),
+            width: 1,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(6),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+        onPressed: () {
+          setState(() {
+            selectedCourtType = type;
+            selectedCourt = courtOptions[type]![0];
+          });
+        },
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : const Color(0XFF12215C),
+            fontSize: 14,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCourtSelection(BuildContext context) {
     return Container(
-      width: double.maxFinite,
-      padding: const EdgeInsets.only(
-        left: 20,
-        top: 16,
-        bottom: 16,
-      ),
-      decoration: const BoxDecoration(
-        color: Color(0XFFFFFFFF),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0X0C000000),
-            spreadRadius: 2,
-            blurRadius: 2,
-            offset: Offset(
-              0,
-              3,
-            ),
-          )
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            width: double.maxFinite,
-            height: 20,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                backgroundColor: const Color(0XFF12215C),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    6,
-                  ),
+      width: MediaQuery.of(context).size.width,
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: PopupMenuButton<String>(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: const Color(0XFF12215C),
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedCourt,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
                 ),
-                visualDensity: const VisualDensity(
-                  vertical: -4,
-                  horizontal: -4,
-                ),
-                padding: const EdgeInsets.only(left: 10),
               ),
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Text(
-                    "Lapangan badminton 1",
-                    style: TextStyle(
-                      color: Color(0XFFFFFFFF),
-                      fontSize: 11,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: SvgPicture.asset(
-                      "assets/images/img_mynauiarrowupdown.svg",
-                      height: 16,
-                      width: 16,
-                      fit: BoxFit.contain,
-                    ),
-                  )
-                ],
+              SvgPicture.asset(
+                "assets/images/img_mynauiarrowupdown.svg",
+                height: 16,
+                width: 16,
+                fit: BoxFit.contain,
               ),
-            ),
-          )
-        ],
+            ],
+          ),
+        ),
+        itemBuilder: (BuildContext context) {
+          return courtOptions[selectedCourtType]!.map((String court) {
+            return PopupMenuItem<String>(
+              value: court,
+              child: Text(court),
+            );
+          }).toList();
+        },
+        onSelected: (String court) {
+          setState(() {
+            selectedCourt = court;
+          });
+        },
       ),
     );
   }
 
-  /// Section Widget
-  Widget _buildScheduleList(BuildContext context) {
-    return Expanded(
-      child: ListView.separated(
-        padding: EdgeInsets.zero,
-        physics: const BouncingScrollPhysics(),
-        shrinkWrap: true,
-        separatorBuilder: (context, index) {
-          return const SizedBox(
-            height: 14,
-          );
-        },
-        itemCount: 14,
-        itemBuilder: (context, index) {
-          return const SchedulelistItemWidget();
-        },
+  Widget _buildScheduleSection(BuildContext context) {
+    return Container(
+      color: const Color(0xFFF5F5F5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            padding: const EdgeInsets.all(16),
+            color: Colors.white,
+            child: const Text(
+              "Kamis, 19 September 2024",
+              style: TextStyle(
+                color: Color(0XFF000000),
+                fontSize: 16,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              itemCount: 14,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: SchedulelistItemWidget(courtName: selectedCourt),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class SchedulelistItemWidget extends StatelessWidget {
-  const SchedulelistItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  final String courtName;
+
+  const SchedulelistItemWidget({
+    Key? key,
+    required this.courtName,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Row(
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0X0C000000),
+            blurRadius: 4,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 12,
+            width: 12,
+            decoration: BoxDecoration(
+              color: const Color(0XFFEB0707),
+              borderRadius: BorderRadius.circular(6),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 10,
-                  width: 10,
-                  margin: const EdgeInsets.only(top: 4),
-                  decoration: BoxDecoration(
-                    color: const Color(0XFFEB0707),
-                    borderRadius: BorderRadius.circular(
-                      5,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      width: double.maxFinite,
-                      padding: const EdgeInsets.only(left: 12),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "07:00 - 08.00",
-                            style: TextStyle(
-                              color: Color(0XFF000000),
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          Text(
-                            "Azizah Salsa",
-                            style: TextStyle(
-                              color: Color(0XFF000000),
-                              fontSize: 12,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w400,
-                            ),
-                          )
-                        ],
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "07:00 - 08.00",
+                      style: TextStyle(
+                        color: Color(0XFF000000),
+                        fontSize: 14,
+                        fontFamily: 'Poppins',
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0XFF12215C),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        courtName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  "Azizah Salsa",
+                  style: TextStyle(
+                    color: Color(0XFF000000),
+                    fontSize: 14,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w400,
                   ),
-                )
+                ),
               ],
             ),
           ),
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          decoration: BoxDecoration(
-            color: const Color(0XFF12215C),
-            borderRadius: BorderRadius.circular(
-              5,
-            ),
-          ),
-          child: const Text(
-            "Lapangan Badminton 1",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color(0XFFFFFFFF),
-              fontSize: 11,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        )
-      ],
+        ],
+      ),
     );
   }
 }

@@ -1,3 +1,7 @@
+import 'package:arena_connect/laporan_keuangan/lap_hari.dart';
+import 'package:arena_connect/pemesanan/pemesanan.dart';
+import 'package:arena_connect/profile/profile.dart';
+import 'package:arena_connect/screens/homepage/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,6 +19,14 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFF1a237e),
         scaffoldBackgroundColor: const Color(0xFF1a237e),
       ),
+      initialRoute: '/pembayaran',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/pesanan': (context) => OrderListScreen(),
+        '/pembayaran': (context) => const PaymentScreen(),
+        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
+        '/profil': (context) => const ProfilScreen(),
+      },
       home: const PaymentScreen(),
     );
   }
@@ -28,36 +40,6 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  int _selectedIndex = 2;
-
-  Widget _bottomNavItem(IconData icon, String label, bool isActive) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedIndex = ['home', 'orders', 'payments', 'reports', 'profile'].indexOf(label.toLowerCase());
-        });
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 12,
-              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -169,20 +151,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _bottomNavItem(Icons.home, 'Beranda', _selectedIndex == 0),
-            _bottomNavItem(Icons.book, 'Pesanan', _selectedIndex == 1),
-            _bottomNavItem(Icons.payments_sharp, 'Transaksi', _selectedIndex == 2),
-            _bottomNavItem(Icons.bar_chart, 'Laporan', _selectedIndex == 3),
-            _bottomNavItem(Icons.person, 'Profil', _selectedIndex == 4),
-          ],
-        ),
-      ),
+      bottomNavigationBar: _BottomNavigation(context),
     );
   }
 
@@ -319,6 +288,47 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _BottomNavigation(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
+          _bottomNavItem(context, '/pembayaran', Icons.payments_sharp, "Transaksi", true),
+          _bottomNavItem(context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
+          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+      String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: isActive ? const Color(0xFF0D2C76) : Colors.grey),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+            ),
+          )
+        ],
+      ),
     );
   }
 }

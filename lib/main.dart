@@ -58,7 +58,7 @@ class MainApp extends StatelessWidget {
         '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
         '/home': (context) => const HomePage(),
         '/pesanan': (context) => OrderListScreen(),
-        '/pembayaran': (context) => PembayaranScreen(),
+        '/pembayaran': (context) => PaymentScreen(),
       },
     );
   }

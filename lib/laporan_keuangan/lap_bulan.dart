@@ -1,3 +1,7 @@
+import 'package:arena_connect/pembayaran/pembayaran.dart';
+import 'package:arena_connect/pemesanan/pemesanan.dart';
+import 'package:arena_connect/profile/profile.dart';
+import 'package:arena_connect/screens/homepage/home.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/laporan_keuangan/daily.dart'; // Pastikan path ini sudah benar
 import 'package:intl/date_symbol_data_local.dart'; // Perbaikan untuk intl
@@ -27,6 +31,14 @@ class LapBulan extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
+      initialRoute: '/laporankeuangan',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/pesanan': (context) => const OrderListScreen(),
+        '/pembayaran': (context) => const PaymentScreen(),
+        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
+        '/profil': (context) => const ProfilScreen(),
+      },
       home: const LaporanKeuanganScreen(),
     );
   }
@@ -113,7 +125,7 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                 Text(
                   formatMonth(currentDate),
                   style: const TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF12215C),
                     letterSpacing: 1.0,
@@ -378,121 +390,48 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
           ),
         ],
       ),
-      bottomNavigationBar:
-          CustomBottomNavigationBar(), // Pisah bottom navigation
-      // bottomNavigationBar: BottomNavigationBar(
-      //   currentIndex: 3,
-      //   selectedItemColor: const Color(0xFF0D2C76),
-      //   unselectedItemColor: Colors.grey,
-      //   showSelectedLabels: true,
-      //   showUnselectedLabels: true,
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Beranda',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.list_alt),
-      //       label: 'Pemesanan',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.payment),
-      //       label: 'Pembayaran',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.bar_chart),
-      //       label: 'Laporan',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.person),
-      //       label: 'Profil',
-      //     ),
-      //   ],
-      // ),
+      bottomNavigationBar: _buildBottomNavigation(context),
     );
   }
-}
-
-class CustomBottomNavigationBar extends StatelessWidget {
-  Widget build(BuildContext context) {
+  Widget _buildBottomNavigation(BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.symmetric(
-          vertical: 16), // Opsional untuk memberi padding di sekitar tombol
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          InkWell(
-            onTap: () {
-              // Aksi ketika ikon Beranda diklik
-              Navigator.pushNamed(context, '/home');
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.home, color: Colors.grey),
-                SizedBox(height: 4),
-                Text("Beranda", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
+          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
+          _bottomNavItem(context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
+          _bottomNavItem(context, '/laporankeuangan', Icons.bar_chart, "Laporan", true),
+          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+      String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
           ),
-          InkWell(
-            onTap: () {
-              // Aksi ketika ikon Pemesanan diklik
-              ;
-              Navigator.pushNamed(context, '/pemesanan');
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.book, color: Colors.grey),
-                SizedBox(height: 4),
-                Text("Pemesanan", style: TextStyle(color: Colors.grey)),
-              ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
             ),
-          ),
-          InkWell(
-            onTap: () {
-              // Aksi ketika ikon Pembayaran diklik
-              Navigator.pushNamed(context, '/pembayaran');
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.payments_sharp, color: Colors.grey),
-                SizedBox(height: 4),
-                Text("Pembayaran", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              // Aksi ketika ikon Laporan diklik
-              Navigator.pushNamed(context, '/laporan');
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.bar_chart, color: Color(0xFF0D2C76)),
-                SizedBox(height: 4),
-                Text("Laporan", style: TextStyle(color: Color(0xFF0D2C76))),
-              ],
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              // Aksi ketika ikon Profil diklik
-              Navigator.pushNamed(context, '/profil');
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.person, color: Colors.grey),
-                SizedBox(height: 4),
-                Text("Profil", style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          ),
+          )
         ],
       ),
     );

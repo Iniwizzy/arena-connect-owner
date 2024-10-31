@@ -1,3 +1,7 @@
+import 'package:arena_connect/pembayaran/pembayaran.dart';
+import 'package:arena_connect/pemesanan/pemesanan.dart';
+import 'package:arena_connect/profile/profile.dart';
+import 'package:arena_connect/screens/homepage/home.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/laporan_keuangan/daily.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -27,6 +31,14 @@ class LapMinggu extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
+      initialRoute: '/laporankeuangan',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/pesanan': (context) => const OrderListScreen(),
+        '/pembayaran': (context) => const PaymentScreen(),
+        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
+        '/profil': (context) => const ProfilScreen(),
+      },
       home: const LaporanKeuanganScreen(),
     );
   }
@@ -58,7 +70,7 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
     DateTime endOfWeek = date.add(Duration(days: 7 - date.weekday)); // Minggu
 
     // Format tanggal awal dan akhir minggu
-    final formatter = DateFormat('dd MMMM yyyy', 'id_ID');
+    final formatter = DateFormat('dd MMM yyyy', 'id_ID');
     String start = formatter.format(startOfWeek);
     String end = formatter.format(endOfWeek);
 
@@ -424,38 +436,54 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        selectedItemColor: const Color(0xFF0D2C76),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
+      bottomNavigationBar: _buildBottomNavigation(context),
+    );
+  }
+  Widget _buildBottomNavigation(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
+          _bottomNavItem(context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
+          _bottomNavItem(context, '/laporankeuangan', Icons.bar_chart, "Laporan", true),
+          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+      String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Pemesanan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: 'Pembayaran',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Laporan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+            ),
+          )
         ],
       ),
     );
   }
 }
+
 
 class TotalPendapatanBox extends StatelessWidget {
   final int totalPendapatan;

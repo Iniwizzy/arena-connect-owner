@@ -1,31 +1,45 @@
+import 'package:arena_connect/laporan_keuangan/lap_hari.dart';
+import 'package:arena_connect/pembayaran/pembayaran.dart';
+import 'package:arena_connect/profile/profile.dart';
+import 'package:arena_connect/screens/homepage/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Order List',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primaryColor: const Color(0xFF12215C),
+        scaffoldBackgroundColor: const Color(0xFF12215C),
       ),
-      home: OrderListScreen(),
+      initialRoute: '/pesanan',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/pesanan': (context) => const OrderListScreen(),
+        '/pembayaran': (context) => const PaymentScreen(),
+        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
+        '/profil': (context) => const ProfilScreen(),
+      },
+      home: const OrderListScreen(),
     );
   }
 }
 
 class OrderListScreen extends StatefulWidget {
+  const OrderListScreen({super.key});
+
   @override
   _OrderListScreenState createState() => _OrderListScreenState();
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
-  int _selectedIndex = 1;
-
   List<Order> orders = [
     Order(
       name: 'Azizah Salsa',
@@ -54,44 +68,18 @@ class _OrderListScreenState extends State<OrderListScreen> {
     ),
   ];
 
-  Widget _bottomNavItem(IconData icon, String label, bool isActive) {
-    return InkWell(
-      onTap: () {
-        // Handle navigation here
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isActive ? Color(0xFF0D2C76) : Colors.grey,
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 12,
-              color: isActive ? Color(0xFF0D2C76) : Colors.grey,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF12215C),
+      backgroundColor: const Color(0xFF12215C),
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/home');
           },
         ),
-        title: Text(
+        title: const Text(
           'DAFTAR PESANAN',
           style: TextStyle(
             color: Colors.white,
@@ -105,10 +93,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
       ),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(30),
@@ -116,28 +104,28 @@ class _OrderListScreenState extends State<OrderListScreen> {
                 ),
               ),
               child: Padding(
-                padding: EdgeInsets.only(top: 20, left: 16.0, right: 16.0),
+                padding: const EdgeInsets.only(top: 20, left: 16.0, right: 16.0),
                 child: ListView.separated(
                   itemCount: orders.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 16.0),
+                  separatorBuilder: (context, index) => const SizedBox(height: 16.0),
                   itemBuilder: (context, index) {
                     Order order = orders[index];
                     return Container(
                       decoration: BoxDecoration(
-                        color: Color(0xFF12215C),
+                        color: const Color(0xFF12215C),
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.grey[300],
+                        leading: const CircleAvatar(
+                          backgroundColor: Color(0xFFE0E0E0),
                           child: Icon(
                             Icons.person,
-                            color: Colors.grey[600],
+                            color: Color(0xFF9E9E9E),
                           ),
                         ),
                         title: Text(
                           order.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                             fontSize: 16.0,
@@ -148,14 +136,14 @@ class _OrderListScreenState extends State<OrderListScreen> {
                           children: [
                             Text(
                               order.activity,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 13.0,
                               ),
                             ),
                             Text(
                               order.date,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.0,
                               ),
@@ -171,9 +159,10 @@ class _OrderListScreenState extends State<OrderListScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
                           ),
-                          child: Text(
+                          child: const Text(
                             'LIHAT DETAIL',
                             style: TextStyle(
                               color: Colors.white,
@@ -191,19 +180,50 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _bottomNavItem(Icons.home, 'Beranda', false),
-            _bottomNavItem(Icons.book, 'Pesanan', true),
-            _bottomNavItem(Icons.payments_sharp, 'Transaksi', false),
-            _bottomNavItem(Icons.bar_chart, 'Laporan', false),
-            _bottomNavItem(Icons.person, 'Profil', false),
-          ],
-        ),
+      bottomNavigationBar: _buildBottomNavigation(context),
+    );
+  }
+
+  Widget _buildBottomNavigation(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", true),
+          _bottomNavItem(context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
+          _bottomNavItem(context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
+          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+      String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+            ),
+          )
+        ],
       ),
     );
   }

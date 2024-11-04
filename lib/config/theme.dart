@@ -5,6 +5,8 @@ Color primary = const Color(0xFF12215C);
 Color secondary = const Color(0xFF489DD6);
 Color tertiary = const Color(0xFFA7ADC3);
 Color white = const Color(0xFFFFFFFF);
+Color  black = const Color(0xFF000000);
+
 
 // Font Styles
 TextStyle superFont1 = TextStyle(
@@ -76,6 +78,12 @@ TextStyle regulerFont3 = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 10,
   color: primary,
+);
+TextStyle regularFont3 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.w500,
+  fontSize: 11,
+  color: black,
 );
 
 TextStyle regulerFont4 = TextStyle(
@@ -162,6 +170,12 @@ TextStyle buttonFont5 = TextStyle(
   fontSize: 10,
   color: white,
 );
+TextStyle facilityStle = TextStyle(
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w400,
+  fontSize: 9,
+  color: black,
+);
 
 TextStyle buttonFont6 = TextStyle(
   fontFamily: 'Poppins',
@@ -210,6 +224,16 @@ ButtonStyle shortButton1 = ElevatedButton.styleFrom(
       borderRadius: BorderRadius.circular(18),
     ),
     padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20));
+
+ButtonStyle shortButton3 = ElevatedButton.styleFrom(
+    minimumSize: const Size(140, 40),
+    backgroundColor: secondary,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
+    padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+);
+    
 
 ButtonStyle shortButtonPrimary = ElevatedButton.styleFrom(
     minimumSize: const Size(131, 32),

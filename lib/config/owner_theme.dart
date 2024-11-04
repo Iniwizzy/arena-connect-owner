@@ -47,8 +47,8 @@ TextStyle priceTextStyle = TextStyle (
 TextStyle buttonTextStyle = TextStyle (
   fontFamily: 'Poppins',
   color: whitecolor,
-  fontWeight: FontWeight.w700,
-  fontSize: 16,
+  fontWeight: FontWeight.w500,
+  fontSize: 14,
 );
 
 TextStyle buttonStyle =  const TextStyle (
@@ -71,6 +71,12 @@ TextStyle lampiranStyle = const TextStyle (
   fontWeight: FontWeight.w600,
   fontSize: 14,
 );
+TextStyle lampiran2Style = const TextStyle (
+  fontFamily: 'Poppins',
+  color: Colors.black,
+  fontWeight: FontWeight.w500,
+  fontSize: 11,
+);
 
 TextStyle dec2TextStyle = const TextStyle (
   fontFamily: 'Poppins',
@@ -88,6 +94,11 @@ TextStyle cariStyle = TextStyle (
   fontFamily: 'Poppins',
   color: Colors.grey.withOpacity(0.8),
   fontWeight: FontWeight.w400,
-  
   fontSize: 12,
+); 
+TextStyle ketStyle = TextStyle (
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
 ); 

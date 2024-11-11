@@ -317,6 +317,7 @@
 // }
 
 
+import 'package:arena_connect/add_field/field_description.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/config/owner_theme.dart';
 import 'package:arena_connect/config/theme.dart';
@@ -475,14 +476,14 @@ class ListFullLapang extends StatelessWidget {
             ),
           ],
         ),
-        height: 320,
+        height: 323,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             InkWell(
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(context ,MaterialPageRoute(builder: (context) => FieldDescription()));
               },
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(

@@ -16,6 +16,8 @@ dependencies:
     tap_to_expand: ^0.7.2
     icons_plus: ^5.0.0
     device_preview: ^1.2.0
+    dotted_line: 3.2.3
+
 
 dev_dependencies:
     flutter_test:

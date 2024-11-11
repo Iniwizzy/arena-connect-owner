@@ -1,3 +1,4 @@
+import 'package:arena_connect/config/theme.dart';
 import 'package:flutter/material.dart';
 
 Color whitecolor = const Color(0xFFFFFFFF);
@@ -69,13 +70,19 @@ TextStyle lampiranStyle = const TextStyle (
   fontFamily: 'Poppins',
   color: Colors.black,
   fontWeight: FontWeight.w600,
-  fontSize: 14,
+  fontSize: 16,
 );
 TextStyle lampiran2Style = const TextStyle (
   fontFamily: 'Poppins',
   color: Colors.black,
   fontWeight: FontWeight.w500,
   fontSize: 11,
+);
+TextStyle lampiran3Style = const TextStyle (
+  fontFamily: 'Source Sans Pro',
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 14,
 );
 
 TextStyle dec2TextStyle = const TextStyle (
@@ -102,3 +109,25 @@ TextStyle ketStyle = TextStyle (
   fontWeight: FontWeight.w400,
   fontSize: 10,
 ); 
+
+TextStyle regulerfont3 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.normal,
+  fontSize: 10,
+  color: black,
+  decoration: TextDecoration.underline,
+);
+TextStyle regulerfont4 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+  color: black,
+  // decoration: TextDecoration.underline,
+);
+
+TextStyle facility2Stle = TextStyle(
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+  color: black,
+);

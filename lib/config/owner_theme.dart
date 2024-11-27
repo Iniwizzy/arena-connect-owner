@@ -109,6 +109,12 @@ TextStyle ketStyle = TextStyle (
   fontWeight: FontWeight.w400,
   fontSize: 10,
 ); 
+TextStyle ket2Style = TextStyle (
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 8,
+); 
 
 TextStyle regulerfont3 = TextStyle(
   fontFamily: 'Source Sans Pro',
@@ -124,10 +130,25 @@ TextStyle regulerfont4 = TextStyle(
   color: black,
   // decoration: TextDecoration.underline,
 );
+TextStyle regulerfont5 = TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.w500,
+  fontSize: 12,
+  color: black,
+  // decoration: TextDecoration.underline,
+);
 
 TextStyle facility2Stle = TextStyle(
   fontFamily: 'Poppins',
   fontWeight: FontWeight.w400,
   fontSize: 10,
   color: black,
+);
+
+ButtonStyle widebutton = ElevatedButton.styleFrom(
+  minimumSize: const Size(301, 37),
+  backgroundColor: const Color(0xFF489DD6),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(5),
+  ),
 );

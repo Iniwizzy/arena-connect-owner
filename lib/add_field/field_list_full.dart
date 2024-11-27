@@ -334,23 +334,16 @@ class ListFullLapang extends StatelessWidget {
       Lapangan(
         name: 'Golden',
         location: 'Kota Semarang',
-        price: 'Rp. 60.000-80.000/jam',
+        price: 'Rp. 60.000/jam',
         imageURL: 'images/lapangan.png',
         facilities: ['Futsal', 'Badminton'],
       ),
       Lapangan(
         name: 'Sapphire',
         location: 'Kota Bandung',
-        price: 'Rp. 70.000-90.000/jam',
+        price: 'Rp. 70.000/jam',
         imageURL: 'images/basketball.jpg',
         facilities: ['Basketball', 'Volley'],
-      ),
-      Lapangan(
-        name: 'Gondang',
-        location: 'Kota  Surabaya',
-        price: 'Rp. 70.000-100.000/jam',
-        imageURL: 'images/volley.jpg',
-        facilities: ['Futsal', 'Volley'],
       ),
       // Tambahkan data lapangan lainnya di sini
     ];
@@ -545,17 +538,20 @@ class ListFullLapang extends StatelessWidget {
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 12),
+                  Text('mulai dari', style: ket2Style),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         lapangan.price,
-                        style: regularFont3,
+                        style: regulerfont5,
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.grey, size: 18),
-                        onPressed: () {},
+                      GestureDetector(
+                        onTap: () {
+                          
+                        },
+                        child: const Icon(Icons.edit, color: Colors.grey, size: 18),
                       ),
                     ],
                   ),

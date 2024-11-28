@@ -13,6 +13,17 @@ dependencies:
         sdk: flutter
     cached_network_image: ^3.3.0
     flutter_svg: ^2.0.9
+    google_fonts: ^6.2.1
+    icons_plus: ^5.0.0
+    shared_preferences: ^2.3.3
+    image_cropper: ^8.0.2
+    image_picker: ^1.1.2
+    image: ^4.3.0
+    device_preview: ^1.2.0
+    decimal: ^3.0.2
+    calendar_date_picker2: ^1.1.7
+    http: ^1.2.2
+    dotted_line: ^3.2.3
 
 dev_dependencies:
     flutter_test:

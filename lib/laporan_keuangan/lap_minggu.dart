@@ -1,16 +1,30 @@
+import 'package:arena_connect/beranda/home_page.dart';
+import 'package:arena_connect/transaksi/transaksi.dart';
+import 'package:arena_connect/pesanan/pesanan.dart';
+import 'package:arena_connect/profile/profil1.dart';
 import 'package:flutter/material.dart';
-import 'package:arena_connect/laporan_keuangan/daily.dart'; // Pastikan path ini sudah benar
+import 'package:arena_connect/laporan_keuangan/daily.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'lap_hari.dart';
+import 'lap_bulan.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  false;
+  await initializeDateFormatting(
+      'id_ID', null); // Inisialisasi untuk format lokal ID
+
+  runApp(const LapMinggu());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LapMinggu extends StatelessWidget {
+  const LapMinggu({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Laporan Keuangan',
       theme: ThemeData(
         primaryColor: Colors.white,
@@ -19,6 +33,14 @@ class MyApp extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.white,
       ),
+      initialRoute: '/laporankeuangan',
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/pesanan': (context) => OrderListScreen(),
+        '/pembayaran': (context) => const PaymentScreen(),
+        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
+        '/profil': (context) => const ProfileScreen(),
+      },
       home: const LaporanKeuanganScreen(),
     );
   }
@@ -32,27 +54,46 @@ class LaporanKeuanganScreen extends StatefulWidget {
 }
 
 class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
-  final int pendapatanLapangan1 = 360000;
-  final int pendapatanLapangan2 = 250000;
-  final int pendapatanLapangan3 = 320000;
+  final int pendapatanLapangan1 = 400000;
+  final int pendapatanLapangan2 = 400000;
+  final int pendapatanLapangan3 = 400000;
+  final int pendapatanLapangan4 = 400000;
+  final int pendapatanLapangan5 = 400000;
+  final int pendapatanLapangan6 = 400000;
+  final int pendapatanLapangan7 = 400000;
 
-  String selectedPeriod = 'Hari'; // Variabel untuk mengatur pilihan periode
+  String selectedPeriod = 'Minggu';
+  DateTime currentDate = DateTime.now();
+  // Fungsi untuk mengubah nama hari dan bulan menjadi bahasa Indonesia dengan format satu minggu
+  String formatWeekRange(DateTime date) {
+    // Cari tanggal awal minggu (Senin) dan akhir minggu (Minggu)
+    DateTime startOfWeek =
+        date.subtract(Duration(days: date.weekday - 1)); // Senin
+    DateTime endOfWeek = date.add(Duration(days: 7 - date.weekday)); // Minggu
+
+    // Format tanggal awal dan akhir minggu
+    final formatter = DateFormat('dd MMM yyyy', 'id_ID');
+    String start = formatter.format(startOfWeek);
+    String end = formatter.format(endOfWeek);
+
+    return '$start - $end'; // Format "dd MMMM yyyy - dd MMMM yyyy"
+  }
 
   @override
   Widget build(BuildContext context) {
-    final int totalPendapatanHariIni = pendapatanLapangan1 + pendapatanLapangan2 + pendapatanLapangan3;
+    final int totalPendapatanHariIni = pendapatanLapangan1 +
+        pendapatanLapangan2 +
+        pendapatanLapangan3 +
+        pendapatanLapangan4 +
+        pendapatanLapangan5 +
+        pendapatanLapangan6 +
+        pendapatanLapangan7;
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF12215C),
         leading: Padding(
           padding: const EdgeInsets.only(left: 16.0),
-          child: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-            onPressed: () {
-              // Aksi saat tombol kembali ditekan
-            },
-          ),
         ),
         title: const Text(
           'LAPORAN KEUANGAN',
@@ -76,26 +117,35 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Color(0xFF12215C)),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                      color: Color(0xFF12215C)),
                   onPressed: () {
+                    setState(() {
+                      currentDate =
+                          currentDate.subtract(const Duration(days: 7));
+                    });
                     // Aksi saat previous ditekan
                   },
                 ),
                 const Spacer(),
-                const Text(
-                  '12 - 19 Oktober 2024',
+                Text(
+                  formatWeekRange(currentDate),
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 20,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF12215C),
-                    letterSpacing: 1.0,
+                    letterSpacing: 0.0,
                   ),
                 ),
                 const Spacer(),
                 IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios_rounded, color: Color(0xFF12215C)),
+                  icon: const Icon(Icons.arrow_forward_ios_rounded,
+                      color: Color(0xFF12215C)),
                   onPressed: () {
-                    // Aksi saat next ditekan
+                    setState(() {
+                      currentDate = currentDate.add(const Duration(days: 7));
+                      // Aksi saat next ditekan
+                    });
                   },
                 ),
               ],
@@ -119,9 +169,17 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                     setState(() {
                       selectedPeriod = 'Hari';
                     });
+                    if (selected) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LapHari()), // Halaman tujuan
+                      );
+                    }
                   },
                   labelStyle: TextStyle(
-                    color: selectedPeriod == 'Hari' ? Colors.white : Colors.black,
+                    color:
+                        selectedPeriod == 'Hari' ? Colors.white : Colors.black,
                   ),
                 ),
                 ChoiceChip(
@@ -134,7 +192,9 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                     });
                   },
                   labelStyle: TextStyle(
-                    color: selectedPeriod == 'Minggu' ? Colors.white : Colors.black,
+                    color: selectedPeriod == 'Minggu'
+                        ? Colors.white
+                        : Colors.black,
                   ),
                 ),
                 ChoiceChip(
@@ -145,9 +205,17 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
                     setState(() {
                       selectedPeriod = 'Bulan';
                     });
+                    if (selected) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => LapBulan()), // Halaman tujuan
+                      );
+                    }
                   },
                   labelStyle: TextStyle(
-                    color: selectedPeriod == 'Bulan' ? Colors.white : Colors.black,
+                    color:
+                        selectedPeriod == 'Bulan' ? Colors.white : Colors.black,
                   ),
                 ),
               ],
@@ -155,146 +223,277 @@ class _LaporanKeuanganScreenState extends State<LaporanKeuanganScreen> {
           ),
           const SizedBox(height: 16),
           // Widget untuk menampilkan total pendapatan
-          TotalPendapatanKerenCard(totalPendapatan: totalPendapatanHariIni),
+          TotalPendapatanBox(totalPendapatan: totalPendapatanHariIni),
           const SizedBox(height: 16),
           // ListView untuk menampilkan data lapangan
           Expanded(
             child: ListView(
-              children: [
+              shrinkWrap: false,
+              children: const [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Senin',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Selasa',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Rabu',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Kamis',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Jumat',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Sabtu',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: LapanganExpansionTile(
                     lapanganName: 'Minggu',
                     transaksi: [
-                      {'jam': 'Lapangan 1', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 2', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 3', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},
-                      {'jam': 'Lapangan 4', 'metode': '5 Siang 2 Malam', 'jumlah': 'Rp. 400.000'},               
+                      {
+                        'jam': 'Lapangan 1',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 2',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 3',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
+                      {
+                        'jam': 'Lapangan 4',
+                        'metode': '5X',
+                        'jumlah': 'Rp. 100.000'
+                      },
                     ],
-                    totalPendapatan: 'Rp. 360.000',
+                    totalPendapatan: 'Rp. 400.000',
                   ),
                 ),
-               
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 3,
-        selectedItemColor: const Color(0xFF0D2C76),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
+      bottomNavigationBar: _buildBottomNavigation(context),
+    );
+  }
+
+  Widget _buildBottomNavigation(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
+          _bottomNavItem(
+              context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
+          _bottomNavItem(
+              context, '/laporankeuangan', Icons.bar_chart, "Laporan", true),
+          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+        ],
+      ),
+    );
+  }
+
+  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+      String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, route);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list_alt),
-            label: 'Pemesanan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payment),
-            label: 'Pembayaran',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: 'Laporan',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+            ),
+          )
         ],
       ),
     );
   }
 }
 
-class TotalPendapatanKerenCard extends StatelessWidget {
+class TotalPendapatanBox extends StatelessWidget {
   final int totalPendapatan;
 
-  const TotalPendapatanKerenCard({required this.totalPendapatan, Key? key}) : super(key: key);
+  const TotalPendapatanBox({required this.totalPendapatan, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -318,11 +517,11 @@ class TotalPendapatanKerenCard extends StatelessWidget {
         children: [
           const SizedBox(height: 8),
           const Text(
-            'Total Pendapatan',
+            'Total Pendapatan Minggu Ini',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: Colors.white70,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 8),

@@ -73,6 +73,18 @@ TextStyle dec3TextStyle = GoogleFonts.poppins(
   fontWeight: FontWeight.w300,
   fontSize: 11,
 );
+TextStyle cariStyle = TextStyle(
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 12,
+);
+TextStyle ketStyle = TextStyle(
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+);
 // Color Palettes
 Color primary = const Color(0xFF12215C);
 Color secondary = const Color(0xFF489DD6);
@@ -149,6 +161,13 @@ TextStyle regulerFont3 = TextStyle(
   fontWeight: FontWeight.normal,
   fontSize: 10,
   color: primary,
+);
+
+TextStyle regularFont3 = const TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.w700,
+  fontSize: 12,
+  color: Colors.black,
 );
 
 TextStyle regulerFont4 = TextStyle(
@@ -236,6 +255,13 @@ TextStyle buttonFont5 = TextStyle(
   color: white,
 );
 
+TextStyle facilityStle = const TextStyle(
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w400,
+  fontSize: 9,
+  color: Colors.black,
+);
+
 TextStyle buttonFont6 = TextStyle(
   fontFamily: 'Poppins',
   fontWeight: FontWeight.bold,
@@ -248,6 +274,48 @@ TextStyle buttonFont7 = TextStyle(
   fontWeight: FontWeight.bold,
   fontSize: 7,
   color: white,
+);
+
+TextStyle lampiran2Style = const TextStyle(
+  fontFamily: 'Poppins',
+  color: Colors.black,
+  fontWeight: FontWeight.w500,
+  fontSize: 11,
+);
+TextStyle lampiran3Style = const TextStyle(
+  fontFamily: 'Source Sans Pro',
+  color: Colors.black,
+  fontWeight: FontWeight.bold,
+  fontSize: 14,
+);
+
+TextStyle regulerfont3 = const TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.normal,
+  fontSize: 10,
+  color: Colors.black,
+  decoration: TextDecoration.underline,
+);
+TextStyle regulerfont4 = const TextStyle(
+  fontFamily: 'Source Sans Pro',
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+  color: Colors.black,
+  // decoration: TextDecoration.underline,
+);
+
+TextStyle facility2Stle = const TextStyle(
+  fontFamily: 'Poppins',
+  fontWeight: FontWeight.w400,
+  fontSize: 10,
+  color: Colors.black,
+);
+
+TextStyle ket2Style = TextStyle(
+  fontFamily: 'Poppins',
+  color: Colors.grey.withOpacity(0.8),
+  fontWeight: FontWeight.w400,
+  fontSize: 8,
 );
 
 // Button Styles //
@@ -284,6 +352,15 @@ ButtonStyle shortButton1 = ElevatedButton.styleFrom(
     ),
     padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20));
 
+ButtonStyle shortButton3 = ElevatedButton.styleFrom(
+  minimumSize: const Size(140, 40),
+  backgroundColor: secondary,
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(8),
+  ),
+  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 3),
+);
+
 ButtonStyle shortButtonPrimary = ElevatedButton.styleFrom(
     minimumSize: const Size(131, 32),
     backgroundColor: primary,
@@ -307,10 +384,3 @@ ButtonStyle shortButton2 = ElevatedButton.styleFrom(
       borderRadius: BorderRadius.circular(5),
     ),
     padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20));
-
-TextStyle cariStyle = TextStyle(
-  fontFamily: 'Poppins',
-  color: Colors.grey.withOpacity(0.8),
-  fontWeight: FontWeight.w400,
-  fontSize: 12,
-);

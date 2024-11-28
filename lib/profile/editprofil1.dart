@@ -1,53 +1,22 @@
-import 'package:arena_connect/api/api.dart';
-import 'package:arena_connect/profile/editprofil1.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:arena_connect/profile/galeri.dart';
 
-// void main() => runApp(const EditProfileScreen());
+// void main() => runApp(EditProfile1Screen());
 
-class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+class EditProfile1Screen extends StatefulWidget {
+  const EditProfile1Screen({super.key});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  _EditProfile1ScreenState createState() => _EditProfile1ScreenState();
 }
 
-class _EditProfileScreenState extends State<EditProfileScreen> {
-  String userName = '';
-  String userEmail = '';
-  bool isLoading = true;
-
+class _EditProfile1ScreenState extends State<EditProfile1Screen> {
   final Color darkBlue = const Color.fromRGBO(18, 33, 92, 1);
   final Color lightBlue = const Color.fromRGBO(72, 157, 214, 1);
   final Color greyColor = const Color(0xFFA7ADC3);
   String? selectedGender;
   DateTime? selectedDate;
   final TextEditingController _dateController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _getUser();
-  }
-
-  Future<void> _getUser() async {
-    final token = await ApiService().getToken();
-    if (token != null) {
-      final response = await ApiService().getUser(token);
-      if (response['success']) {
-        setState(() {
-          userName = response['data']['name'];
-          userEmail = response['data']['email'];
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,13 +35,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
-            Navigator.pushNamed(context, '/profil');
+            Navigator.pushNamed(context, '/profil1');
           },
         ),
       ),
       body: Column(
         children: [
-          // Bagian informasi profil di atas
           Stack(
             children: [
               Container(
@@ -80,22 +48,18 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 padding: const EdgeInsets.all(24.0),
                 child: Row(
                   children: [
-                    // Avatar dengan ikon kamera di pojok kanan bawah
                     Stack(
                       children: [
-                        CircleAvatar(
+                        const CircleAvatar(
                           radius: 29,
-                          backgroundColor: Colors.grey[200],
-                          child: const Icon(Icons.person,
-                              size: 29, color: Color.fromRGBO(18, 33, 92, 1)),
+                          backgroundImage: AssetImage('images/galeri6.jpg'),
                         ),
                         Positioned(
                           bottom: 0,
                           right: 0,
                           child: InkWell(
                             onTap: () {
-                              _showProfilePhotoOptions(
-                                  context); // Panggil fungsi untuk menampilkan opsi foto
+                              _showProfilePhotoOptions(context);
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -118,7 +82,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          userName,
+                          'Brian',
                           style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 19,
@@ -126,7 +90,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           ),
                         ),
                         Text(
-                          userEmail,
+                          'brianss123@gmail.com',
                           style: GoogleFonts.poppins(
                             color: greyColor,
                             fontSize: 14,
@@ -139,12 +103,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ],
           ),
-
-          // Form edit profil
+          // const Spacer(),
           Expanded(
             child: Container(
-              // height: 5000,
+              height: 500,
+
               // width: 2000,
+
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),
@@ -161,36 +126,28 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   const SizedBox(height: 16),
                   _buildTextField(label: "Nomor HP", icon: Icons.phone),
                   const SizedBox(height: 16),
-
-                  // Dropdown for gender selection
                   _buildCustomDropdownField(),
                   const SizedBox(height: 16),
-
-                  // Date picker for date of birth
                   _buildCustomDatePickerField(),
-
                   const SizedBox(height: 32),
-
-                  // Tombol Perbarui Profil dengan ukuran lebih kecil
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: lightBlue,
                       padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, // Mengurangi ukuran padding vertikal
-                        horizontal: 12.0, // Mengurangi padding horizontal
-                      ),
+                          vertical: 8.0, horizontal: 12.0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
                     onPressed: () {
-                      // Aksi saat tombol ditekan
+                      _showConfirmationDialog(
+                          context); // Tampilkan popup konfirmasi
                     },
                     child: Center(
                       child: Text(
                         "Perbarui Profil",
                         style: GoogleFonts.poppins(
-                          fontSize: 14, // Optionally reduce font size
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: Colors.white,
                         ),
@@ -207,7 +164,87 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-// Bottom sheet untuk memilih foto profil
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Center(
+            child: Text(
+              'Simpan Perubahan',
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          content: Text(
+            'Apakah kamu yakin ingin menyimpan perubahan?',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.black54,
+            ),
+          ),
+          actions: [
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: darkBlue,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 24.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Tutup dialog
+                    },
+                    child: Text(
+                      'Kembali',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: lightBlue,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 24.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    onPressed: () {
+                      // Lakukan aksi simpan di sini
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Simpan',
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _showProfilePhotoOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -218,30 +255,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                leading: const Icon(Icons.camera_alt,
-                    color: Color.fromRGBO(18, 33, 92, 1)), // Set warna ikon
+                leading: Icon(Icons.camera_alt, color: darkBlue),
                 title: const Text('Ambil Foto'),
                 onTap: () {
                   // Handle photo capture
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library,
-                    color: Color.fromRGBO(18, 33, 92, 1)), // Set warna ikon
+                leading: Icon(Icons.photo_library, color: darkBlue),
                 title: const Text('Ambil dari Galeri'),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          const GalleryScreen(), // Navigate to GaleriScreen
-                    ),
-                  ); // Handle gallery photo selection
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.delete,
-                    color: Color.fromRGBO(18, 33, 92, 1)), // Set warna ikon
+                leading: Icon(Icons.delete, color: darkBlue),
                 title: const Text('Hapus Foto'),
                 onTap: () {
                   // Handle photo deletion
@@ -297,38 +325,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  // Widget untuk membuat TextField
   Widget _buildTextField({required String label, required IconData icon}) {
     return TextField(
-      style: TextStyle(color: greyColor), // Set text color to grey
+      style: TextStyle(color: greyColor),
       decoration: InputDecoration(
         labelText: label,
         labelStyle: GoogleFonts.poppins(
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Colors.white.withOpacity(0.7), // White with some opacity
+          color: Colors.white.withOpacity(0.7),
         ),
-        prefixIcon:
-            Icon(icon, color: Colors.white), // Change icon color to white
+        prefixIcon: Icon(icon, color: Colors.white),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(
-            color: Colors.white, // Change border color to white
-          ),
+          borderSide: const BorderSide(color: Colors.white),
         ),
         filled: true,
-        fillColor: darkBlue, // Change fill color to darkBlue
-        floatingLabelBehavior:
-            FloatingLabelBehavior.never, // Prevent label from floating
+        fillColor: darkBlue,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
       ),
     );
   }
 
-  // Widget for dropdown gender field with clickable icon
   Widget _buildCustomDropdownField() {
     return Container(
       decoration: BoxDecoration(
-        color: darkBlue, // Set dark blue background for the dropdown field
+        color: darkBlue,
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white),
       ),
@@ -340,37 +362,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: selectedGender,
-                  iconSize: 0, // Hide the default arrow icon
+                  iconSize: 0,
                   hint: Text(
                     'Jenis Kelamin',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.white
-                          .withOpacity(0.7), // Slight transparency for the hint
+                      color: Colors.white.withOpacity(0.7),
                     ),
                   ),
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.white, // White text for dropdown items
-                  ),
-                  dropdownColor:
-                      darkBlue, // Change dropdown background to dark blue
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.white),
+                  dropdownColor: darkBlue,
                   items: [
                     DropdownMenuItem(
                       value: 'Laki-Laki',
-                      child: Text(
-                        'Laki-Laki',
-                        style: GoogleFonts.poppins(
-                            color: Colors.white), // White text for items
-                      ),
+                      child: Text('Laki-Laki',
+                          style: GoogleFonts.poppins(color: Colors.white)),
                     ),
                     DropdownMenuItem(
                       value: 'Perempuan',
-                      child: Text(
-                        'Perempuan',
-                        style: GoogleFonts.poppins(
-                            color: Colors.white), // White text for items
-                      ),
+                      child: Text('Perempuan',
+                          style: GoogleFonts.poppins(color: Colors.white)),
                     ),
                   ],
                   onChanged: (value) {
@@ -380,15 +391,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   },
                 ),
               ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              _showDropdown(); // Custom function to show dropdown
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: const Icon(Icons.arrow_drop_down, color: Colors.white),
             ),
           ),
         ],
@@ -418,7 +420,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               controller: _dateController,
               readOnly: true,
               style: GoogleFonts.poppins(
-                fontSize: 16, // Set font size same as Nama Depan, etc.
+                fontSize: 14, // Set font size same as Nama Depan, etc.
                 color: greyColor, // Set text color to grey
               ),
               decoration: InputDecoration(

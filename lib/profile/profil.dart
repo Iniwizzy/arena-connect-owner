@@ -1,25 +1,45 @@
-// import 'package:arena_connect/profile/editprofil1.dart';
+import 'package:arena_connect/api/api.dart';
+import 'package:arena_connect/profile/editprofil.dart';
+import 'package:arena_connect/profile/profil1.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:arena_connect/profile/editprofil.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ProfilPage extends StatefulWidget {
+  const ProfilPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const ProfileScreen(),
-      theme: ThemeData(
-        textTheme:
-            GoogleFonts.poppinsTextTheme(), // Mengatur font menjadi Poppins
-      ),
-    );
-  }
+  State<ProfilPage> createState() => _ProfilPageState();
 }
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class _ProfilPageState extends State<ProfilPage> {
+  String userName = '';
+  String userEmail = '';
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
+
+  Future<void> _getUser() async {
+    final token = await ApiService().getToken();
+    if (token != null) {
+      final response = await ApiService().getUser(token);
+      if (response['success']) {
+        setState(() {
+          userName = response['data']['name'];
+          userEmail = response['data']['email'];
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +76,14 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Selamat Datang',
+                      'Selamat Datang,',
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 14,
                       ),
                     ),
                     Text(
-                      'Brian',
+                      userName,
                       style: GoogleFonts.poppins(
                         color: Colors.white
                             .withOpacity(0.9), // Warna pudar pada nama Brian

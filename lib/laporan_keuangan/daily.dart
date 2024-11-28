@@ -20,14 +20,32 @@ class LapanganExpansionTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF12215C),
+          color: const Color(0xFF12215C), // Warna latar belakang
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: ExpansionTile(
-          initiallyExpanded: true,
-          title: Text(
-            lapanganName,
-            style: const TextStyle(color: Colors.white),
+          initiallyExpanded: false, // Tetap ditutup pada awalnya
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                lapanganName,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  '$totalPendapatan',
+                  textAlign: TextAlign.center, // Menempatkan teks di tengah
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
           iconColor: Colors.white, // Ikon putih saat dibuka
           collapsedIconColor: Colors.white, // Ikon tetap putih saat ditutup
@@ -66,24 +84,9 @@ class LapanganExpansionTile extends StatelessWidget {
                 );
               }).toList(),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: Text(
-                  'Total: $totalPendapatan',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 }
-

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:arena_connect/config/theme.dart';
 
+// ignore: must_be_immutable
 class KalenderScreen extends StatelessWidget {
-  KalenderScreen({Key? key}) : super(key: key);
+  KalenderScreen({super.key});
 
   List<DateTime?> selectedDatesFromCalendar = [];
 
@@ -39,7 +40,7 @@ class KalenderScreen extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      centerTitle: true,
+      centerTitle: false,
     );
   }
 

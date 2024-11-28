@@ -1,42 +1,27 @@
-import 'package:arena_connect/laporan_keuangan/lap_hari.dart';
-import 'package:arena_connect/pembayaran/pembayaran.dart';
-import 'package:arena_connect/profile/profile.dart';
-import 'package:arena_connect/beranda/home_page.dart';
-import 'package:arena_connect/transaksi/transaksi.dart';
 import 'package:flutter/material.dart';
 
-class Pemesanan extends StatelessWidget {
-  const Pemesanan({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      title: 'Order List',
       theme: ThemeData(
-        primaryColor: const Color(0xFF12215C),
-        scaffoldBackgroundColor: const Color(0xFF12215C),
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: '/pesanan',
-      routes: {
-        '/home': (context) => const HomePage(),
-        '/pesanan': (context) => const OrderListScreen(),
-        '/pembayaran': (context) => const PaymentScreen(),
-        '/laporankeuangan': (context) => const LaporanKeuanganScreen(),
-        '/profil': (context) => const ProfilScreen(),
-      },
-      home: const OrderListScreen(),
+      home: OrderListScreen(),
     );
   }
 }
 
 class OrderListScreen extends StatefulWidget {
-  const OrderListScreen({super.key});
-
   @override
   _OrderListScreenState createState() => _OrderListScreenState();
 }
 
 class _OrderListScreenState extends State<OrderListScreen> {
+  int _selectedIndex = 1;
+
   List<Order> orders = [
     Order(
       name: 'Azizah Salsa',
@@ -65,6 +50,32 @@ class _OrderListScreenState extends State<OrderListScreen> {
     ),
   ];
 
+  Widget _bottomNavItem(IconData icon, String label, bool isActive) {
+    return InkWell(
+      onTap: () {
+        // Handle navigation here
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
+            color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Poppins',
+              fontSize: 12,
+              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +84,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            Navigator.pushNamed(context, '/home');
+            Navigator.pop(context);
           },
         ),
         title: const Text(
@@ -115,11 +126,11 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         borderRadius: BorderRadius.circular(15.0),
                       ),
                       child: ListTile(
-                        leading: const CircleAvatar(
-                          backgroundColor: Color(0xFFE0E0E0),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.grey[300],
                           child: Icon(
                             Icons.person,
-                            color: Color(0xFF9E9E9E),
+                            color: Colors.grey[600],
                           ),
                         ),
                         title: Text(
@@ -151,8 +162,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
                         ),
                         trailing: ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context,
-                                '/deskpesanan'); // Handle "Lihat Detail" button press
+                            // Handle "Lihat Detail" button press
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue[400],
@@ -180,55 +190,52 @@ class _OrderListScreenState extends State<OrderListScreen> {
           ),
         ],
       ),
-      bottomNavigationBar: _buildBottomNavigation(context),
+      bottomNavigationBar: _BottomNavigation(context),
     );
   }
+}
 
-  Widget _buildBottomNavigation(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
-          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", true),
-          _bottomNavItem(
-              context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
-          _bottomNavItem(
-              context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
-          _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
-        ],
-      ),
-    );
-  }
+Widget _BottomNavigation(BuildContext context) {
+  return Container(
+    color: Colors.white,
+    padding: const EdgeInsets.symmetric(vertical: 10), // Padding vertikal
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
+        _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", true),
+        _bottomNavItem(
+            context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
+        _bottomNavItem(
+            context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
+        _bottomNavItem(context, '/profil', Icons.person, "Profil", false),
+      ],
+    ),
+  );
+}
 
-  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
-      String label, bool isActive) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, route);
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
+Widget _bottomNavItem(BuildContext context, String route, IconData icon,
+    String label, bool isActive) {
+  return InkWell(
+    onTap: () {
+      Navigator.pushNamed(context, route);
+    },
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, color: isActive ? const Color(0xFF0D2C76) : Colors.grey),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontFamily: 'Poppins', // Mengatur font menjadi Poppins
+            fontSize: 12,
             color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
           ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 12,
-              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
-            ),
-          )
-        ],
-      ),
-    );
-  }
+        )
+      ],
+    ),
+  );
 }
 
 class Order {

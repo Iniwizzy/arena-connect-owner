@@ -53,7 +53,7 @@ class _KalenderDetailJadwalScreenState
           color: Colors.white,
         ),
       ),
-      centerTitle: true,
+      centerTitle: false,
     );
   }
 
@@ -133,7 +133,7 @@ class _KalenderDetailJadwalScreenState
                 ),
               ),
               SvgPicture.asset(
-                "assets/images/img_mynauiarrowupdown.svg",
+                "images/img_mynauiarrowupdown.svg",
                 height: 16,
                 width: 16,
                 fit: BoxFit.contain,

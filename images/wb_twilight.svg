@@ -1,0 +1,10 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="wb_twilight">
+<mask id="mask0_1071_940" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+<rect id="Bounding box" width="24" height="24" fill="#D9D9D9"/>
+</mask>
+<g mask="url(#mask0_1071_940)">
+<path id="wb_twilight_2" d="M18.35 10.1L16.95 8.65L19.1 6.55L20.5 7.95L18.35 10.1ZM2 20V18H22V20H2ZM11 7V4H13V7H11ZM5.65 10.05L3.55 7.9L4.95 6.5L7.1 8.65L5.65 10.05ZM7.425 14H16.575C16.1917 13.1 15.5917 12.375 14.775 11.825C13.9583 11.275 13.0333 11 12 11C10.9667 11 10.0417 11.275 9.225 11.825C8.40833 12.375 7.80833 13.1 7.425 14ZM5 16C5 14.05 5.67917 12.3958 7.0375 11.0375C8.39583 9.67917 10.05 9 12 9C13.95 9 15.6042 9.67917 16.9625 11.0375C18.3208 12.3958 19 14.05 19 16H5Z" fill="black"/>
+</g>
+</g>
+</svg>

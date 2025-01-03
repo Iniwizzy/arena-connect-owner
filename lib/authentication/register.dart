@@ -1,7 +1,7 @@
-// import 'package:arena_connect/authentication/login.dart';
-// import 'package:arena_connect/beranda/beranda_screen.dart';
+import 'package:arena_connect/config/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:arena_connect/api/api.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -13,7 +13,54 @@ class RegisterPage extends StatefulWidget {
 class RegisterPageState extends State<RegisterPage> {
   bool _isPasswordObscured = true;
 
-  // final
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final ApiService _apiService = ApiService();
+
+  String? _nameError;
+  String? _emailError;
+  String? _phoneError;
+  String? _passwordError;
+
+  void _register() async {
+    setState(() {
+      _nameError = null;
+      _emailError = null;
+      _phoneError = null;
+      _passwordError = null;
+    });
+
+    final name = _nameController.text;
+    final email = _emailController.text;
+    final phoneNumber = _phoneController.text;
+    final password = _passwordController.text;
+
+    final result =
+        await _apiService.register(name, email, phoneNumber, password);
+
+    if (result['success'] == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registrasi berhasil')),
+      );
+      Navigator.pushNamed(context, '/login');
+    } else {
+      final errors = result != null ? result['errors'] : null;
+
+      setState(() {
+        // Memastikan kita tidak mengalami NoSuchMethodError dengan memeriksa apakah errors null
+        _nameError = errors?['name']?.first;
+        _emailError = errors?['email']?.first;
+        _phoneError = errors?['phone_number']?.first;
+        _passwordError = errors?['password']?.first;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registrasi gagal, periksa input Anda')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +68,12 @@ class RegisterPageState extends State<RegisterPage> {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Background image
           Positioned.fill(
             child: Image.asset(
               'images/background-image.png',
               fit: BoxFit.cover,
             ),
           ),
-          // Main content
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -47,7 +92,7 @@ class RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50)
+                  const SizedBox(height: 10)
                 ],
               ),
               Center(
@@ -77,11 +122,12 @@ class RegisterPageState extends State<RegisterPage> {
                                 color: Color(0xFF12215C),
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: "SourceSans3"),
+                                fontFamily: "Source Sans Pro"),
                           ),
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
+                          controller: _phoneController,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.phone,
                                 color: Colors.grey, size: 20),
@@ -103,15 +149,17 @@ class RegisterPageState extends State<RegisterPage> {
                                 width: 0.8,
                               ),
                             ),
+                            errorText: _phoneError,
                           ),
                           style: const TextStyle(
-                              fontFamily: "SourceSans3",
+                              fontFamily: "Source Sans Pro",
                               fontWeight: FontWeight.w100,
                               color: Color(0xFF0A0A0A),
                               fontSize: 14),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 12),
                         TextFormField(
+                          controller: _emailController,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.email,
                                 color: Colors.grey, size: 20),
@@ -133,15 +181,17 @@ class RegisterPageState extends State<RegisterPage> {
                                 width: 0.8,
                               ),
                             ),
+                            errorText: _emailError,
                           ),
                           style: const TextStyle(
-                              fontFamily: "SourceSans3",
+                              fontFamily: "Source Sans Pro",
                               fontWeight: FontWeight.w100,
                               color: Color(0xFF0A0A0A),
                               fontSize: 14),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 12),
                         TextFormField(
+                          controller: _nameController,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.account_circle,
                                 color: Colors.grey, size: 20),
@@ -163,15 +213,17 @@ class RegisterPageState extends State<RegisterPage> {
                                 width: 0.8,
                               ),
                             ),
+                            errorText: _nameError,
                           ),
                           style: const TextStyle(
-                              fontFamily: "SourceSans3",
+                              fontFamily: "Source Sans Pro",
                               fontWeight: FontWeight.w100,
                               color: Color(0xFF0A0A0A),
                               fontSize: 14),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 12),
                         TextFormField(
+                          controller: _passwordController,
                           obscureText: _isPasswordObscured,
                           decoration: InputDecoration(
                             prefixIcon: const Icon(Icons.lock,
@@ -194,6 +246,7 @@ class RegisterPageState extends State<RegisterPage> {
                                 width: 0.8,
                               ),
                             ),
+                            errorText: _passwordError,
                             suffixIcon: IconButton(
                               icon: Icon(
                                   _isPasswordObscured
@@ -209,39 +262,29 @@ class RegisterPageState extends State<RegisterPage> {
                             ),
                           ),
                           style: const TextStyle(
-                            fontFamily: "SourceSans3",
+                            fontFamily: "Source Sans Pro",
                             fontWeight: FontWeight.w100,
                             color: Color(0xFF0A0A0A),
                             fontSize: 14,
                           ),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/register');
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF489DD6),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 20),
-                            child: Text(
-                              "Daftar",
-                              style: TextStyle(
-                                  fontFamily: 'SourceSans3',
-                                  color: Color(0xFFffffff)),
-                            ),
+                          onPressed: _register,
+                          style: shortButtonSecondary,
+                          child: Text(
+                            "Daftar",
+                            style: buttonFont3,
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 12),
                         RichText(
                           text: TextSpan(
                             text: 'Sudah punya akun? ',
                             style: const TextStyle(
                               fontSize: 12,
                               color: Color(0xFF12215C),
-                              fontFamily: "SourceSans3",
+                              fontFamily: "Source Sans Pro",
                             ),
                             children: <TextSpan>[
                               TextSpan(

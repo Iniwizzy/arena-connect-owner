@@ -31,8 +31,8 @@ class LapanganExpansionTile extends StatelessWidget {
               Text(
                 lapanganName,
                 style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Expanded(
@@ -84,7 +84,6 @@ class LapanganExpansionTile extends StatelessWidget {
                 );
               }).toList(),
             ),
-            
           ],
         ),
       ),

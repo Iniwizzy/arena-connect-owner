@@ -64,11 +64,14 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            _buildFieldRow("Nama Lengkap", "Azizah Salsa", fontWeight: FontWeight.normal),
+            _buildFieldRow("Nama Lengkap", "Azizah Salsa",
+                fontWeight: FontWeight.normal),
             const SizedBox(height: 10),
-            _buildFieldRow("Nama Bank", "BNI", isBankField: true, fontWeight: FontWeight.normal),
+            _buildFieldRow("Nama Bank", "BNI",
+                isBankField: true, fontWeight: FontWeight.normal),
             const SizedBox(height: 10),
-            _buildFieldRow("No. Rekening", "12345678", fontWeight: FontWeight.normal),
+            _buildFieldRow("No. Rekening", "12345678",
+                fontWeight: FontWeight.normal),
             const SizedBox(height: 16), // Jarak sebelum pembatas
             const Divider(color: Colors.grey),
             const SizedBox(height: 16), // Jarak setelah pembatas
@@ -77,7 +80,10 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
               children: [
                 const Text(
                   "Atur Sebagai Rekening Utama",
-                  style: TextStyle(fontSize: 16, color: Color(0xFF12215C), fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF12215C),
+                      fontWeight: FontWeight.bold),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -116,7 +122,8 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF489DD6), // Menggunakan warna palet
+                  backgroundColor:
+                      const Color(0xFF489DD6), // Menggunakan warna palet
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -128,7 +135,8 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const KonfirmasiInformasiBankScreen(),
+                      builder: (context) =>
+                          const KonfirmasiInformasiBankScreen(),
                     ),
                   );
                 },
@@ -182,7 +190,8 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
     );
   }
 
-  Widget _buildFieldRow(String title, String value, {bool isBankField = false, FontWeight fontWeight = FontWeight.normal}) {
+  Widget _buildFieldRow(String title, String value,
+      {bool isBankField = false, FontWeight fontWeight = FontWeight.normal}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(

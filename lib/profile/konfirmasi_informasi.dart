@@ -15,7 +15,8 @@ class KonfirmasiInformasiBankScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
-        scaffoldBackgroundColor: const Color(0xFFF4F6F9), // Background lebih lembut
+        scaffoldBackgroundColor:
+            const Color(0xFFF4F6F9), // Background lebih lembut
       ),
       home: const KonfirmasiInformasiBankPage(),
     );
@@ -77,7 +78,9 @@ class _KonfirmasiInformasiBankPageState
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 color: Colors.white, // Background putih
-                border: Border.all(color: const Color(0xFF12215C), width: 1), // Border biru tua
+                border: Border.all(
+                    color: const Color(0xFF12215C),
+                    width: 1), // Border biru tua
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.1),
@@ -90,11 +93,14 @@ class _KonfirmasiInformasiBankPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildFieldRow("Nama Bank", "BNI", fontWeight: FontWeight.bold),
+                  _buildFieldRow("Nama Bank", "BNI",
+                      fontWeight: FontWeight.bold),
                   const SizedBox(height: 8),
-                  _buildFieldRow("No. Rekening", "12345678", fontWeight: FontWeight.bold),
+                  _buildFieldRow("No. Rekening", "12345678",
+                      fontWeight: FontWeight.bold),
                   const SizedBox(height: 8),
-                  _buildFieldRow("Nama Lengkap", "Azizah Salsa", fontWeight: FontWeight.bold, hasDivider: false),
+                  _buildFieldRow("Nama Lengkap", "Azizah Salsa",
+                      fontWeight: FontWeight.bold, hasDivider: false),
                 ],
               ),
             ),
@@ -163,8 +169,8 @@ class _KonfirmasiInformasiBankPageState
     );
   }
 
-  Widget _buildFieldRow(
-      String title, String value, {FontWeight fontWeight = FontWeight.normal, bool hasDivider = true}) {
+  Widget _buildFieldRow(String title, String value,
+      {FontWeight fontWeight = FontWeight.normal, bool hasDivider = true}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Column(
@@ -186,7 +192,10 @@ class _KonfirmasiInformasiBankPageState
               fontWeight: FontWeight.w300, // Mempertipis nilai
             ),
           ),
-          if (hasDivider) const Divider(color: Colors.grey), // Garis pembatas tipis jika hasDivider true
+          if (hasDivider)
+            const Divider(
+                color:
+                    Colors.grey), // Garis pembatas tipis jika hasDivider true
         ],
       ),
     );

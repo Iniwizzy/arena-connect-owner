@@ -139,42 +139,70 @@ class _PaymentScreenState extends State<PaymentScreen> {
           SafeArea(
             child: Column(
               children: [
-                // App Bar
-                const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Row(
-                    children: [
-                      BackButton(color: Colors.white),
-                      Text(
-                        'PEMBAYARAN',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ],
+                AppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/home');
+                    },
                   ),
-                ),
-
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    onChanged: updateSearchQuery,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Cari nama pemesan',
-                      hintStyle: TextStyle(color: Colors.grey[400]),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                  title: const Text(
+                    'PEMBAYARAN',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  centerTitle: true,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                ),
+                // App Bar
+                // const Padding(
+                //   padding: EdgeInsets.all(16.0),
+                //   child: Row(
+                //     children: [
+                //       Icon(Icons.arrow_back_ios, color: Colors.white),
+                //       Text(
+                //         'PEMBAYARAN',
+                //         style: TextStyle(
+
+                //           color: Colors.white,
+                //           fontWeight: FontWeight.bold,
+                //           fontSize: 20,
+                //         ),
+
+                //       ),
+
+                //     ],
+                //   ),
+                // ),
+
+                // Search Bar
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: TextField(
+                        onChanged: updateSearchQuery,
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: Colors.white,
+                          hintText: 'Cari nama pemesan',
+                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          prefixIcon:
+                              Icon(Icons.search, color: Colors.grey[400]),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding:
+                              const EdgeInsets.symmetric(vertical: 0),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 // Payment Details Section

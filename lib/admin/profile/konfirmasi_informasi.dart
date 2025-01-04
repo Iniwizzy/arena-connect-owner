@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:arena_connect/admin/profile/tambah_rekening2.dart';
 
-void main() {
-  runApp(const KonfirmasiInformasiBankScreen());
-}
-
 class KonfirmasiInformasiBankScreen extends StatelessWidget {
   const KonfirmasiInformasiBankScreen({super.key});
 

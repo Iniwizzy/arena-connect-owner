@@ -161,7 +161,7 @@ class _ProfilPageState extends State<ProfilPage> {
                         icon: Icons.credit_card,
                         title: "Tambah Rekening",
                         onTap: () {
-                          Navigator.pushNamed(context, '/notifikasiprofil');
+                          Navigator.pushNamed(context, '/rekening');
                           // Navigasi ke halaman Notifikasi
                         },
                       ),

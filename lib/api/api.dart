@@ -208,68 +208,111 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> addField({
-    required String name,
-    required String fieldCentreId,
-    required String type,
-    required String descriptions,
-    required String status,
+  required String name,
+  required String fieldCentreId,
+  required String type,
+  required String descriptions,
+  required String status,
   }) async {
     try {
       String? token = await getToken();
       final url = Uri.parse('$baseUrl/fields');
 
-      print('Adding Field with Details:');
-      print('Field Centre ID: $fieldCentreId');
-      print('Name: $name');
-      print('Type: $type');
-      print('Descriptions: $descriptions');
-      print('Status: $status');
+      // Convert status string to boolean before sending
+      final bool statusBool = status.toLowerCase() == 'true';
+
+      // Create the request body
+      final requestBody = {
+        'name': name,
+        'field_centre_id': int.parse(fieldCentreId),
+        'type': type,
+        'descriptions': descriptions,
+        'status': statusBool,
+      };
+
+      // Debug print the complete request
+      print('Request URL: $url');
+      print('Request Headers: {');
+      print('  Content-Type: application/json');
+      if (token != null) print('  Authorization: Bearer ${token.substring(0, 20)}...'); // Only print part of token for security
+      print('}');
+      print('Request Body: ${jsonEncode(requestBody)}');
 
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json', // Add Accept header
           if (token != null) 'Authorization': 'Bearer $token',
         },
-        body: jsonEncode({
-          'name': name,
-          'field_centre_id':
-              int.parse(fieldCentreId), // Force parsing as integer
-          'type': type,
-          'descriptions': descriptions,
-          'status': status,
-        }),
+        body: jsonEncode(requestBody),
       );
 
-      print('Response status code: ${response.statusCode}');
-      print('Response body: ${response.body}');
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Headers: ${response.headers}');
+      print('Raw Response Body: ${response.body}');
 
-      if (response.statusCode == 201) {
+      // Handle empty response
+      if (response.body.isEmpty) {
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          // If status is success but body is empty, treat as success
+          return {
+            'success': true,
+            'message': 'Lapangan berhasil ditambahkan',
+            'data': requestBody // Return the sent data as confirmation
+          };
+        } else {
+          return {
+            'success': false,
+            'message': 'Server returned empty response with status ${response.statusCode}',
+          };
+        }
+      }
+
+      // Try to parse the response body
+      try {
         final responseData = jsonDecode(response.body);
-        return {
-          'success': true,
-          'data': responseData['data'],
-          'message': responseData['message'] ?? 'Lapangan berhasil ditambahkan'
-        };
-      } else if (response.statusCode == 422) {
-        // Validation error
-        final errorData = jsonDecode(response.body);
+        
+        if (response.statusCode == 201 || response.statusCode == 200) {
+          return {
+            'success': true,
+            'data': responseData['data'] ?? requestBody,
+            'message': responseData['message'] ?? 'Lapangan berhasil ditambahkan'
+          };
+        } else if (response.statusCode == 422) {
+          return {
+            'success': false,
+            'message': 'Validasi gagal',
+            'errors': responseData['data']
+          };
+        } else {
+          return {
+            'success': false,
+            'message': responseData['message'] ?? 'Gagal menambahkan lapangan',
+            'errors': responseData['data']
+          };
+        }
+      } catch (parseError) {
+        print('Error parsing response: $parseError');
+        // If we can't parse the response but got a success status code, treat as success
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          return {
+            'success': true,
+            'message': 'Lapangan berhasil ditambahkan',
+            'data': requestBody
+          };
+        }
         return {
           'success': false,
-          'message': 'Validasi gagal',
-          'errors': errorData['data']
-        };
-      } else {
-        final errorData = jsonDecode(response.body);
-        return {
-          'success': false,
-          'message': errorData['message'] ?? 'Gagal menambahkan lapangan',
-          'errors': errorData['data']
+          'message': 'Gagal memproses response dari server: $parseError',
         };
       }
     } catch (e) {
       print('Error adding field: $e');
-      return {'success': false, 'message': 'Terjadi kesalahan: $e'};
+      return {
+        'success': false, 
+        'message': 'Terjadi kesalahan: $e'
+      };
     }
   }
 

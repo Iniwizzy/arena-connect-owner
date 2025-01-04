@@ -5,11 +5,11 @@ import 'package:arena_connect/admin/config/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TambahLapangan extends StatefulWidget {
-  final String? fieldCentreId; // Make this optional
+  final String? fieldCentreId;
 
   const TambahLapangan({
     Key? key,
-    this.fieldCentreId, // Remove the required attribute
+    this.fieldCentreId,
   }) : super(key: key);
 
   @override
@@ -21,16 +21,10 @@ class _TambahLapanganState extends State<TambahLapangan> {
   final TextEditingController _descriptionsController = TextEditingController();
 
   String _selectedType = 'Futsal';
-  String _selectedStatus = 'Tersedia';
+  bool _isAvailable = true; // Changed to boolean
   bool isSubmitting = false;
 
   final List<String> _types = ['Futsal', 'Badminton'];
-  final List<String> _statuses = [
-    'Tersedia',
-    'Telah dibooking',
-    'Dalam perbaikan',
-    'Tidak tersedia'
-  ];
 
   final ApiService _apiService = ApiService();
 
@@ -40,7 +34,6 @@ class _TambahLapanganState extends State<TambahLapangan> {
   }
 
   Future<void> submitField() async {
-    // Validate form before submission
     if (!isFormFilled()) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -56,20 +49,15 @@ class _TambahLapanganState extends State<TambahLapangan> {
     });
 
     try {
-      // Comprehensive debugging for field centre ID
       final prefs = await SharedPreferences.getInstance();
-
-      // Check all possible sources of field centre ID
       String? widgetFieldCentreId = widget.fieldCentreId;
       String? prefsFieldCentreId = prefs.getString('field_centre_id');
 
       print('Widget Field Centre ID: $widgetFieldCentreId');
       print('Prefs Field Centre ID: $prefsFieldCentreId');
 
-      // Prioritize sources of field centre ID
       String? fieldCentreId = widgetFieldCentreId ?? prefsFieldCentreId;
 
-      // Print all SharedPreferences keys to debug
       print('All SharedPreferences keys:');
       print(prefs.getKeys());
 
@@ -94,13 +82,11 @@ class _TambahLapanganState extends State<TambahLapangan> {
         fieldCentreId: fieldCentreId,
         type: _selectedType,
         descriptions: _descriptionsController.text,
-        status: _selectedStatus,
+        status: _isAvailable.toString(), // Convert boolean to string
       );
 
-      // Debug print the entire result
       print('Add Field Result: $result');
 
-      // Detailed error handling
       if (result['success']) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -108,10 +94,8 @@ class _TambahLapanganState extends State<TambahLapangan> {
             backgroundColor: Colors.green,
           ),
         );
-        Navigator.pushReplacementNamed(context,
-            '/daftarlapang'); // Return true to indicate successful addition
+        Navigator.pushReplacementNamed(context, '/listlapang');
       } else {
-        // Handle specific validation errors
         if (result['errors'] != null) {
           String errorMessage = '';
           Map<String, dynamic> errors = result['errors'];
@@ -133,7 +117,6 @@ class _TambahLapanganState extends State<TambahLapangan> {
             ),
           );
         } else {
-          // Generic error message
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(result['message'] ?? 'Gagal menambahkan lapangan'),
@@ -229,37 +212,34 @@ class _TambahLapanganState extends State<TambahLapangan> {
                   controller: _descriptionsController),
               const SizedBox(height: 24),
 
-              // Status Dropdown
-              Text(
-                "Status",
-                style: superFont2.copyWith(
-                  color: tertiary,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 15,
-                ),
+              // Status Switch
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Status Lapangan",
+                    style: superFont2.copyWith(
+                      color: tertiary,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 15,
+                    ),
+                  ),
+                  Switch(
+                    value: _isAvailable,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isAvailable = value;
+                      });
+                    },
+                    activeColor: primary,
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: tertiary),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: _selectedStatus,
-                  underline: Container(),
-                  items: _statuses.map((String status) {
-                    return DropdownMenuItem<String>(
-                      value: status,
-                      child: Text(status),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      _selectedStatus = newValue!;
-                    });
-                  },
+              Text(
+                _isAvailable ? "Tersedia" : "Dalam Perbaikan",
+                style: superFont2.copyWith(
+                  color: _isAvailable ? Colors.green : Colors.red,
+                  fontSize: 14,
                 ),
               ),
               const SizedBox(height: 40),
@@ -300,7 +280,6 @@ class _TambahLapanganState extends State<TambahLapangan> {
     );
   }
 
-  // Utility method for input fields (assumed to be defined elsewhere)
   Widget buildInputField({
     required String labelText,
     TextEditingController? controller,

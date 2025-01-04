@@ -59,42 +59,6 @@ class _ListFieldsState extends State<ListFields> {
     getField();
   }
 
-  // Future<void> getFieldCentres() async {
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  //   try {
-  //     String? token = await ApiService().getToken();
-  //     if (token == null) throw Exception('Token not found');
-
-  //     final response = await http.get(
-  //       Uri.parse("$baseUrl/field_centres"),
-  //       headers: {'Authorization': 'Bearer $token'},
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       List<FieldCentre>? data = resFieldCentresFromJson(response.body).data;
-  //       setState(() {
-  //         listFieldCentre = data ?? [];
-  //         filteredFieldCentre = listFieldCentre;
-  //       });
-  //     } else {
-  //       throw Exception('Failed to load field centres');
-  //     }
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(e.toString()),
-  //         backgroundColor: Colors.red, // Changed to red for error indication
-  //       ),
-  //     );
-  //   } finally {
-  //     setState(() {
-  //       isLoading = false;
-  //     });
-  //   }
-  // }
-
   void updateSearchQuery(String query) {
     setState(() {
       searchQuery = query;
@@ -254,39 +218,7 @@ class _ListFieldsState extends State<ListFields> {
                                   //             style: facilityStle,
                                   //             textAlign: TextAlign.center,
                                   //           ),
-                                  //           // if (facility == 'Futsal') ...[
-                                  //           //   const Icon(Icons.sports_soccer,
-                                  //           //       size: 10),
-                                  //           //   const SizedBox(width: 5),
-                                  //           // ] else if (facility ==
-                                  //           //     'Badminton') ...[
-                                  //           //   const Icon(
-                                  //           //       MingCute.badminton_line,
-                                  //           //       size: 10),
-                                  //           //   const SizedBox(width: 5),
-                                  //           // ] else if (facility ==
-                                  //           //     'Volley') ...[
-                                  //           //   const Icon(
-                                  //           //       Icons
-                                  //           //           .sports_volleyball_outlined,
-                                  //           //       size: 10),
-                                  //           //   const SizedBox(width: 5),
-                                  //           // ] else if (facility ==
-                                  //           //     'Basketball') ...[
-                                  //           //   const Icon(
-                                  //           //       Icons
-                                  //           //           .sports_basketball_outlined,
-                                  //           //       size: 10),
-                                  //           //   const SizedBox(width: 5),
-                                  //           // ],
-                                  //           // Text(facility,
-                                  //           //     style: facilityStle,
-                                  //           //     textAlign: TextAlign.center),
-                                  //         ],
-                                  //       ),
-                                  //     );
-                                  //   }).toList(),
-                                  // ),
+                                  
                                   const SizedBox(height: 5),
                                   Row(
                                     mainAxisAlignment:
@@ -337,22 +269,6 @@ class _ListFieldsState extends State<ListFields> {
     ]));
   }
 
-  // // Helper method to get icon based on field type
-  // Widget _getIconForFieldType(FieldType facility) {
-  //   switch (facility) {
-  //     case FieldType.Futsal:
-  //       return const Icon(Icons.sports_soccer, size: 10);
-  //     case FieldType.Badminton:
-  //       return const Icon(MingCute.badminton_line, size: 10);
-  //     case FieldType.Volley:
-  //       return const Icon(Icons.sports_volleyball_outlined, size: 10);
-  //     case FieldType.Basketball:
-  //       return const Icon(Icons.sports_basketball_outlined, size: 10);
-  //     default:
-  //       return const Icon(Icons.sports_outlined, size: 10);
-  //   }
-  // }
-
   Widget searchBar() {
     return SizedBox(
       height: 30,
@@ -399,7 +315,7 @@ class _ListFieldsState extends State<ListFields> {
               icon: const Icon(Icons.add, color: Colors.grey),
               padding: EdgeInsets.zero,
               onPressed: () {
-                Navigator.pushNamed(context, '/daftarlapangan');
+                Navigator.pushNamed(context, '/tambahlapangan');
               },
             ),
           ),

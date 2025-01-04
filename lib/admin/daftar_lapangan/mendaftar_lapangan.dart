@@ -173,7 +173,7 @@ class _RegisterFieldState extends State<RegisterField> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Lapangan berhasil didaftarkan')),
         );
-        Navigator.pushNamed(context, '/tambahlapangan');
+        Navigator.pushNamed(context, '/profile');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

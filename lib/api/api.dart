@@ -49,6 +49,7 @@ class ApiService {
       final responseData = jsonDecode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('token', responseData['token']);
+      await prefs.setString('user_id', responseData['user']['id'].toString());
       return {
         'success': true,
         'token': responseData['token'],

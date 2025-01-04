@@ -7,13 +7,8 @@ class TambahRekeningScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        fontFamily: GoogleFonts.poppins().fontFamily,
-      ),
-      home: const TambahRekeningPage(),
-    );
+    // Hapus MaterialApp di sini karena akan menyebabkan context baru
+    return const TambahRekeningPage();
   }
 }
 
@@ -25,61 +20,85 @@ class TambahRekeningPage extends StatefulWidget {
 }
 
 class _TambahRekeningPageState extends State<TambahRekeningPage> {
-  int _currentIndex = 4; // Default: Profil tab aktif
+  int _currentIndex = 4;
   bool _isRekeningUtama = true;
+  String? selectedBank;
+  
+  // List of available banks
+  final List<String> banks = ['BRI', 'BNI', 'Mandiri', 'BCA'];
+  
+  // Form controllers
+  final _formKey = GlobalKey<FormState>();
+  final _namaController = TextEditingController();
+  final _noRekeningController = TextEditingController();
+
+  @override
+  void dispose() {
+    _namaController.dispose();
+    _noRekeningController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF12215C),
-          titleSpacing: 0,
-          title: const Text(
-            "Tambah Rekening Bank",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
-              size: 18,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF12215C),
+        titleSpacing: 0,
+        title: const Text(
+          "Tambah Rekening Bank",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.white,
+            size: 18,
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-              _buildFieldRow("Nama Lengkap", "Azizah Salsa",
-                  fontWeight: FontWeight.normal),
+              _buildFormField(
+                "Nama Lengkap",
+                _namaController,
+                TextInputType.name,
+              ),
               const SizedBox(height: 10),
-              _buildFieldRow("Nama Bank", "BNI",
-                  isBankField: true, fontWeight: FontWeight.normal),
+              _buildBankDropdown(),
               const SizedBox(height: 10),
-              _buildFieldRow("No. Rekening", "12345678",
-                  fontWeight: FontWeight.normal),
-              const SizedBox(height: 16), // Jarak sebelum pembatas
+              _buildFormField(
+                "No. Rekening",
+                _noRekeningController,
+                TextInputType.number,
+              ),
+              const SizedBox(height: 16),
               const Divider(color: Colors.grey),
-              const SizedBox(height: 16), // Jarak setelah pembatas
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     "Atur Sebagai Rekening Utama",
                     style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF12215C),
-                        fontWeight: FontWeight.bold),
+                      fontSize: 16,
+                      color: Color(0xFF12215C),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -118,8 +137,7 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        const Color(0xFF489DD6), // Menggunakan warna palet
+                    backgroundColor: const Color(0xFF489DD6),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -127,14 +145,22 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
                     elevation: 5,
                   ),
                   onPressed: () {
-                    // Navigasi ke halaman Konfirmasi Informasi Bank setelah tombol "SIMPAN" ditekan
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            const KonfirmasiInformasiBankScreen(),
-                      ),
-                    );
+                    if (_formKey.currentState!.validate() && selectedBank != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              const KonfirmasiInformasiBankScreen(),
+                        ),
+                      );
+                    } else if (selectedBank == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Silakan pilih bank terlebih dahulu'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
                   },
                   child: const Text(
                     "SIMPAN",
@@ -149,49 +175,112 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
             ],
           ),
         ),
-        bottomNavigationBar: _BottomNavigation(context));
-  }
-
-  Widget _BottomNavigation(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.symmetric(vertical: 10), // Padding vertikal
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _bottomNavItem(context, '/home', Icons.home, "Beranda", false),
-          _bottomNavItem(context, '/pesanan', Icons.book, "Pesanan", false),
-          _bottomNavItem(
-              context, '/pembayaran', Icons.payments_sharp, "Transaksi", false),
-          _bottomNavItem(
-              context, '/laporankeuangan', Icons.bar_chart, "Laporan", false),
-          _bottomNavItem(context, '/profil', Icons.person, "Profil", true),
-        ],
       ),
     );
   }
 
-  Widget _bottomNavItem(BuildContext context, String route, IconData icon,
-      String label, bool isActive) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, route);
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: isActive ? const Color(0xFF0D2C76) : Colors.grey),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontFamily: 'Poppins', // Mengatur font menjadi Poppins
-              fontSize: 12,
-              color: isActive ? const Color(0xFF0D2C76) : Colors.grey,
+  Widget _buildFormField(
+    String label,
+    TextEditingController controller,
+    TextInputType keyboardType,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Color(0xFF12215C),
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.grey[100],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
             ),
-          )
-        ],
-      ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
+          ),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Field ini tidak boleh kosong';
+            }
+            return null;
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBankDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Nama Bank",
+          style: TextStyle(
+            fontSize: 16,
+            color: Color(0xFF12215C),
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButtonFormField<String>(
+            value: selectedBank,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            style: const TextStyle(
+              fontSize: 16,
+              color: Color(0xFF489DD6),
+            ),
+            hint: const Text(
+              'Pilih Bank',
+              style: TextStyle(
+                color: Color(0xFF489DD6),
+              ),
+            ),
+            items: banks.map((String bank) {
+              return DropdownMenuItem<String>(
+                value: bank,
+                child: Text(
+                  bank,
+                  style: const TextStyle(
+                    color: Color(0xFF12215C),
+                  ),
+                ),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                selectedBank = newValue;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 

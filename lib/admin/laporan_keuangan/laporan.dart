@@ -83,7 +83,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       backgroundColor: const Color(0xFF12215C),
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(

@@ -14,8 +14,10 @@ import 'package:arena_connect/admin/pemesanan/pemesanan.dart';
 import 'package:arena_connect/admin/profile/bahasa.dart';
 import 'package:arena_connect/admin/profile/editprofil.dart';
 import 'package:arena_connect/admin/profile/kebijakanprivasi.dart';
+import 'package:arena_connect/admin/profile/konfirmasi_informasi.dart';
 import 'package:arena_connect/admin/profile/notifikasi_profile.dart';
 import 'package:arena_connect/admin/profile/profil.dart';
+import 'package:arena_connect/admin/profile/tambah_rekening2.dart';
 import 'package:arena_connect/admin/profile/tambahakun.dart';
 import 'package:arena_connect/admin/profile/ubahsandi.dart';
 import 'package:arena_connect/admin/transaksi/transaksi.dart';
@@ -80,6 +82,7 @@ class MainApp extends StatelessWidget {
         '/notifikasiprofil': (context) => const NotificationSettingsScreen(),
         // '/keluar': (context) =>
         '/kebijakanprivasi': (context) => const PrivacyPolicyScreen(),
+        '/rekening': (context) => const TambahRekeningScreen(),
         // '/validasi': (context) => const ValidasiPesanan()
         '/profile': (context) => const BottomNavWrapper(child: ProfilePage()),
         '/search': (context) => const BottomNavWrapper(child: SparringSearch()),

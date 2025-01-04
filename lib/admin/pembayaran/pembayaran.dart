@@ -11,7 +11,7 @@ class PembayaranPage extends StatelessWidget {
           backgroundColor: primary,
           elevation: 0,
           leading: Icon(
-            Icons.arrow_back,
+            Icons.arrow_back_ios,
             color: white,
           ),
           title: Text('PEMBAYARAN',

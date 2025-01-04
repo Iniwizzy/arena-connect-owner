@@ -1,7 +1,8 @@
-import 'package:arena_connect/config/theme.dart';
+import 'package:arena_connect/admin/config/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/api/api.dart';
+import 'package:arena_connect/admin/model/res_user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -26,32 +27,36 @@ class LoginPageState extends State<LoginPage> {
       _passwordError = null;
     });
 
-    final email = _emailController.text.trim();
+    final email = _emailController.text;
     final password = _passwordController.text;
-
-    // Validasi input awal
-    if (email.isEmpty) {
-      setState(() => _emailError = "Email tidak boleh kosong");
-      return;
-    }
-    if (password.isEmpty) {
-      setState(() => _passwordError = "Password tidak boleh kosong");
-      return;
-    }
 
     final result = await _apiService.login(email, password);
 
+    // Validasi input awal
     if (result['success']) {
+      // Asumsikan result['data'] memberikan object User
+      final user = result['data'] as User; // Cast ke model User
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login berhasil')),
       );
-      Navigator.pushNamed(context, '/home');
+
+      // Gunakan property role dari class User
+      if (user.role == 'Customer') {
+        Navigator.pushReplacementNamed(context, '/homepage');
+      } else if (user.role == 'Admin Lapangan') {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Role tidak valid')),
+        );
+      }
     } else {
       final errors = result['errors'] ?? {};
 
       setState(() {
-        _emailError = errors['email']?.first;
-        _passwordError = errors['password']?.first;
+        _emailError = errors['email']?.first ?? null;
+        _passwordError = errors['password']?.first ?? null;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -63,6 +68,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Stack(
         children: [

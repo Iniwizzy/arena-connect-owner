@@ -22,34 +22,31 @@ class HomeScreen extends StatelessWidget {
           ),
           // Main content
           Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10, top: 40),
-                        child: Image.asset(
-                          'images/arena-connect1.png',
-                          width: 80,
-                          height: 80,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Center(
-                    child: Text(
-                      "  Welcome to"
-                      "\nArena Connect ",
-                      style: TextStyle(
-                          fontFamily: "Kanit",
-                          color: Color(0xFF12215C),
-                          fontWeight: FontWeight.w700,
-                          fontSize: 31),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 100),
+                    height: 150,
+                    width: 150,
+                    child: Center(
+                      // padding: const EdgeInsets.symmetric(),
+                      child: Image.asset('images/arena-connect1.png',
+                          width: 150, height: 150),
                     ),
-                  )
+                  ),
+                  // const Center(
+                  //   child: Text(
+                  //     "  Welcome to"
+                  //     "\nArena Connect ",
+                  //     style: TextStyle(
+                  //         fontFamily: "Kanit",
+                  //         color: Color(0xFF12215C),
+                  //         fontWeight: FontWeight.w700,
+                  //         fontSize: 31),
+                  //   ),
+                  // )
                 ],
               ),
               Center(

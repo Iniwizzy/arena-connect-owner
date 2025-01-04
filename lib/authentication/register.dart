@@ -1,4 +1,4 @@
-import 'package:arena_connect/config/theme.dart';
+import 'package:arena_connect/admin/config/theme.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/api/api.dart';
@@ -92,7 +92,7 @@ class RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10)
+                  const SizedBox(height: 16)
                 ],
               ),
               Center(

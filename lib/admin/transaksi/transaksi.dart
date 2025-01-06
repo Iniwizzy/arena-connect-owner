@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // class Pembayaran extends StatelessWidget {
 //   const Pembayaran({super.key});
@@ -51,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Uri.parse("$baseUrl/payments"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resFieldFromJson(res.body).data;
+      List<Payment>? data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
         listPayment = data ?? [];
@@ -459,9 +461,12 @@ Widget _buildPaymentCard(dynamic pesanan,
                   children: [
                     _buildDetailRow('Nomor Invoice', pesanan.orderId),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Tanggal', pesanan.booking.date),
+                    _buildDetailRow(
+                        'Tanggal',
+                        DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(
+                            DateTime.parse(pesanan.booking.date.toString()))),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Metode Pembayaran', pesanan.paymentMethod),
+                    _buildDetailRow('Metode Pembayaran', pesanan.bank.bankName),
                     const SizedBox(height: 8),
                     _buildDetailRow('Status', pesanan.status),
                     const SizedBox(height: 8),

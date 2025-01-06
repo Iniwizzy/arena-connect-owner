@@ -186,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: buttonFont2,
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/');
                         },
                       ),
                     ),

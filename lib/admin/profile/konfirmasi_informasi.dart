@@ -52,12 +52,7 @@ class _KonfirmasiInformasiBankPageState
             size: 18,
           ),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const TambahRekeningScreen(),
-              ),
-            );
+            Navigator.pop(context);
           },
           splashColor: Colors.white.withOpacity(0.3), // Efek splash pada tombol
         ),
@@ -128,40 +123,6 @@ class _KonfirmasiInformasiBankPageState
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        selectedItemColor: const Color(0xFF12215C),
-        unselectedItemColor: const Color(0xFFA0A0A0),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "Beranda",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book_sharp),
-            label: "Pesanan",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.payments_rounded),
-            label: "Transaksi",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bar_chart),
-            label: "Laporan",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "Profil",
-          ),
-        ],
-      ),
     );
   }
 
@@ -191,7 +152,7 @@ class _KonfirmasiInformasiBankPageState
           if (hasDivider)
             const Divider(
                 color:
-                    Colors.grey), // Garis pembatas tipis jika hasDivider true
+                    Colors.white), // Garis pembatas tipis jika hasDivider true
         ],
       ),
     );

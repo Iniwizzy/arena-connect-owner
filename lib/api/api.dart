@@ -7,8 +7,9 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arena_connect/customer/models/booking.dart' as booking;
 
-const String baseUrl = 'http://localhost:8000/api';
-// const String imageUrl = 'http://localhost/storage/foto_lapangan/';
+// const String baseUrl = 'http://localhost:8000/api';
+const String baseUrl = 'http://103.150.117.116/api';
+const String imageUrl = 'http://103.150.117.116/storage/receipts/';
 
 class ApiService {
   Future<Map<String, dynamic>> register(
@@ -208,11 +209,11 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> addField({
-  required String name,
-  required String fieldCentreId,
-  required String type,
-  required String descriptions,
-  required String status,
+    required String name,
+    required String fieldCentreId,
+    required String type,
+    required String descriptions,
+    required String status,
   }) async {
     try {
       String? token = await getToken();
@@ -234,7 +235,9 @@ class ApiService {
       print('Request URL: $url');
       print('Request Headers: {');
       print('  Content-Type: application/json');
-      if (token != null) print('  Authorization: Bearer ${token.substring(0, 20)}...'); // Only print part of token for security
+      if (token != null)
+        print(
+            '  Authorization: Bearer ${token.substring(0, 20)}...'); // Only print part of token for security
       print('}');
       print('Request Body: ${jsonEncode(requestBody)}');
 
@@ -264,7 +267,8 @@ class ApiService {
         } else {
           return {
             'success': false,
-            'message': 'Server returned empty response with status ${response.statusCode}',
+            'message':
+                'Server returned empty response with status ${response.statusCode}',
           };
         }
       }
@@ -272,12 +276,13 @@ class ApiService {
       // Try to parse the response body
       try {
         final responseData = jsonDecode(response.body);
-        
+
         if (response.statusCode == 201 || response.statusCode == 200) {
           return {
             'success': true,
             'data': responseData['data'] ?? requestBody,
-            'message': responseData['message'] ?? 'Lapangan berhasil ditambahkan'
+            'message':
+                responseData['message'] ?? 'Lapangan berhasil ditambahkan'
           };
         } else if (response.statusCode == 422) {
           return {
@@ -309,10 +314,7 @@ class ApiService {
       }
     } catch (e) {
       print('Error adding field: $e');
-      return {
-        'success': false, 
-        'message': 'Terjadi kesalahan: $e'
-      };
+      return {'success': false, 'message': 'Terjadi kesalahan: $e'};
     }
   }
 

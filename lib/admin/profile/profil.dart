@@ -69,11 +69,9 @@ class _ProfilPageState extends State<ProfilPage> {
             margin: EdgeInsets.only(top: 0),
             child: Row(
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   radius: 29,
-                  backgroundColor: Colors.grey[200],
-                  child: const Icon(Icons.person,
-                      size: 29, color: Color.fromRGBO(18, 33, 92, 1)),
+                  backgroundImage: NetworkImage('https://picsum.photos/200'),
                 ),
                 const SizedBox(width: 16),
                 Column(

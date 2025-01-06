@@ -40,13 +40,13 @@ class RegisterPageState extends State<RegisterPage> {
     final result =
         await _apiService.register(name, email, phoneNumber, password);
 
-    if (result['success'] == true) {
+    if (result['success']) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registrasi berhasil')),
       );
       Navigator.pushNamed(context, '/login');
     } else {
-      final errors = result != null ? result['errors'] : null;
+      final errors = result['errors'];
 
       setState(() {
         // Memastikan kita tidak mengalami NoSuchMethodError dengan memeriksa apakah errors null

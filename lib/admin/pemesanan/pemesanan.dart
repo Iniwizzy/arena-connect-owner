@@ -4,13 +4,16 @@ import 'package:arena_connect/api/api.dart';
 // import 'package:arena_connect/laporan_keuangan/lap_hari.dart';
 import 'package:arena_connect/admin/laporan_keuangan/laporan.dart';
 // import 'package:arena_connect/model/res_bookings.dart';
-import 'package:arena_connect/admin/model/res_payments.dart';
+// import 'package:arena_connect/customer/model/res_payments.dart';
 import 'package:arena_connect/admin/pembayaran/pembayaran.dart';
 import 'package:arena_connect/admin/profile/profil.dart';
 import 'package:arena_connect/admin/beranda/home_page.dart';
 import 'package:arena_connect/admin/transaksi/transaksi.dart';
+import 'package:arena_connect/admin/model/res_payments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Pemesanan extends StatelessWidget {
   const Pemesanan({super.key});
@@ -64,7 +67,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         Uri.parse("$baseUrl/payments"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resFieldFromJson(res.body).data;
+      List<Payment>? data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
         listBooking = data ?? [];
@@ -87,18 +90,19 @@ class _OrderListScreenState extends State<OrderListScreen> {
       BuildContext context, String status, String id) async {
     try {
       final response = await http.put(
-        Uri.parse('http://127.0.0.1:8000/api/payments/$id'),
+        Uri.parse("$baseUrl/payment-status/$id"),
         body: json.encode({"status": status}),
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Status berhasil diubah ke $status.')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Status berhasil diubah ke $status.'),
+          backgroundColor: Colors.green,
+        ));
         getField(); // Refresh list
-        // debugPrint(response.body);
+        debugPrint(response.body);
       } else {
-        // debugPrint(response.body);
+        debugPrint(response.body);
         throw Exception('Gagal mengubah status: ${response.statusCode}');
       }
     } catch (e) {
@@ -120,7 +124,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   Widget build(BuildContext context) {
     // Filter orders with "Belum" status
     List<dynamic> filteredBookingBelum = filteredBooking
-        .where((payment) => payment.status.toLowerCase() == "belum")
+        .where((payment) => payment.status.toLowerCase() == "proses")
         .toList();
 
     return Scaffold(
@@ -172,11 +176,9 @@ class _OrderListScreenState extends State<OrderListScreen> {
                       ),
                       child: ListTile(
                         leading: const CircleAvatar(
-                          backgroundColor: Color(0xFFE0E0E0),
-                          child: Icon(
-                            Icons.person,
-                            color: Color(0xFF9E9E9E),
-                          ),
+                          backgroundImage:
+                              NetworkImage('https://picsum.photos/200'),
+                          radius: 25,
                         ),
                         title: Text(
                           filteredBookingBelum[index].user.name,
@@ -197,12 +199,16 @@ class _OrderListScreenState extends State<OrderListScreen> {
                               ),
                             ),
                             Text(
-                              filteredBookingBelum[index].booking.date,
+                              DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(
+                                  DateTime.parse(filteredBookingBelum[index]
+                                      .booking
+                                      .date
+                                      .toString())),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12.0,
                               ),
-                            ),
+                            )
                           ],
                         ),
                         trailing: ElevatedButton(
@@ -347,9 +353,9 @@ class DetailPesanan extends StatelessWidget {
             ),
             Divider(color: Colors.grey[400]),
             ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.grey,
-                child: Icon(Icons.person, color: Colors.white),
+              leading: const CircleAvatar(
+                backgroundImage: NetworkImage('https://picsum.photos/200'),
+                radius: 25,
               ),
               title: Text(
                 pesanan.user.name,
@@ -399,10 +405,11 @@ class DetailPesanan extends StatelessWidget {
                 Expanded(
                   flex: 3,
                   child: Text(
-                    pesanan.booking.date,
+                    DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(
+                        DateTime.parse(pesanan.booking.date.toString())),
                     style: TextStyle(color: Colors.white),
                   ),
-                ),
+                )
               ],
             ),
             const SizedBox(height: 16),
@@ -422,7 +429,7 @@ class DetailPesanan extends StatelessWidget {
                         top: Radius.circular(8.0),
                       ),
                       image: DecorationImage(
-                        image: NetworkImage(pesanan.receipt[0]),
+                        image: NetworkImage('$imageUrl${pesanan.receipt}'),
                         fit: BoxFit.cover,
                       ),
                     ),

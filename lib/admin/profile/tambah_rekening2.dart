@@ -23,10 +23,10 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
   int _currentIndex = 4;
   bool _isRekeningUtama = true;
   String? selectedBank;
-  
+
   // List of available banks
   final List<String> banks = ['BRI', 'BNI', 'Mandiri', 'BCA'];
-  
+
   // Form controllers
   final _formKey = GlobalKey<FormState>();
   final _namaController = TextEditingController();
@@ -61,7 +61,7 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
             size: 18,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/profil');
           },
         ),
       ),
@@ -145,7 +145,8 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
                     elevation: 5,
                   ),
                   onPressed: () {
-                    if (_formKey.currentState!.validate() && selectedBank != null) {
+                    if (_formKey.currentState!.validate() &&
+                        selectedBank != null) {
                       Navigator.push(
                         context,
                         MaterialPageRoute(

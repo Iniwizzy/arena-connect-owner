@@ -122,6 +122,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('id_ID', null);
     // Filter orders with "Belum" status
     List<dynamic> filteredBookingBelum = filteredBooking
         .where((payment) => payment.status.toLowerCase() == "proses")
@@ -429,7 +430,11 @@ class DetailPesanan extends StatelessWidget {
                         top: Radius.circular(8.0),
                       ),
                       image: DecorationImage(
-                        image: NetworkImage('$imageUrl${pesanan.receipt}'),
+                        image: pesanan.receipt != null &&
+                                pesanan.receipt!.isNotEmpty
+                            ? NetworkImage('$imageUrl${pesanan.receipt}')
+                            : const AssetImage('assets/images/bni.jpg')
+                                as ImageProvider, // Ganti dengan gambar lokal
                         fit: BoxFit.cover,
                       ),
                     ),

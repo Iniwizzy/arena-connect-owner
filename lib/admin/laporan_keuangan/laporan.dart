@@ -4,6 +4,7 @@ import 'package:arena_connect/api/api.dart';
 import 'package:arena_connect/admin/model/res_payments.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class FinancialReportScreen extends StatefulWidget {
@@ -15,8 +16,8 @@ class FinancialReportScreen extends StatefulWidget {
 
 class _FinancialReportScreenState extends State<FinancialReportScreen> {
   bool isLoading = false;
-  List<Payment> listBooking = [];
-  List<Payment> filteredBooking = [];
+  List<Payment> listLaporan = [];
+  List<Payment> filteredLaporan = [];
   String totalPendapatan = '';
   int totalTransaksi = 0;
 
@@ -36,8 +37,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       List<Payment>? data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
-        listBooking = data ?? [];
-        filteredBooking = listBooking;
+        listLaporan = data ?? [];
+        filteredLaporan = listLaporan;
       });
     } catch (e) {
       setState(() {
@@ -79,6 +80,10 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('id_ID', null);
+    List<dynamic> filteredLaporanSelesai = filteredLaporan
+        .where((payment) => payment.status.toLowerCase() == "selesai")
+        .toList();
     return Scaffold(
       backgroundColor: const Color(0xFF12215C),
       appBar: AppBar(
@@ -166,31 +171,38 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                             ],
                           ),
                           const Divider(color: Colors.white24),
-                          ListView.builder(
+                          ListView.separated(
                             shrinkWrap: true,
                             physics:
                                 const NeverScrollableScrollPhysics(), // Changed ScrollPhysics
-                            itemCount: 3,
+                            itemCount: filteredLaporanSelesai.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 16.0),
                             itemBuilder: (context, index) {
+                              final laporan = filteredLaporanSelesai[index];
                               return Container(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 8),
-                                child: const Row(
+                                child: Row(
                                   children: [
                                     Expanded(
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Tanggal',
                                             style: TextStyle(
                                               color: Colors.white60,
                                             ),
                                           ),
                                           Text(
-                                            '17 September 2024',
-                                            style: TextStyle(
+                                            DateFormat('EEEE, d MMMM yyyy',
+                                                    'id_ID')
+                                                .format(DateTime.parse(laporan
+                                                    .booking.date
+                                                    .toString())),
+                                            style: const TextStyle(
                                               color: Colors.white,
                                             ),
                                           ),
@@ -202,15 +214,15 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            'Banyak Sewa',
+                                          const Text(
+                                            'Nama Penyewa',
                                             style: TextStyle(
                                               color: Colors.white60,
                                             ),
                                           ),
                                           Text(
-                                            '7 Sewa',
-                                            style: TextStyle(
+                                            laporan.user.name,
+                                            style: const TextStyle(
                                               color: Colors.white,
                                             ),
                                           ),
@@ -222,15 +234,16 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.end,
                                         children: [
-                                          Text(
+                                          const Text(
                                             'Jumlah',
                                             style: TextStyle(
                                               color: Colors.white60,
                                             ),
                                           ),
                                           Text(
-                                            'Rp. 450.000',
-                                            style: TextStyle(
+                                            formatCurrency(
+                                                laporan.totalPayment),
+                                            style: const TextStyle(
                                               color: Colors.white,
                                             ),
                                           ),

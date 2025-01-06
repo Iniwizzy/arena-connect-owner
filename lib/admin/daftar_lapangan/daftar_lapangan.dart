@@ -144,7 +144,7 @@ class _ListFieldsState extends State<ListFields> {
                               child: Column(
                                 children: [
                                   Container(
-                                    height: 180,
+                                    height: 150,
                                     decoration: BoxDecoration(
                                       borderRadius: const BorderRadius.vertical(
                                           top: Radius.circular(8.0)),

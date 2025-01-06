@@ -119,6 +119,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget build(BuildContext context) {
+    initializeDateFormatting('id_ID', null);
     List<dynamic> filteredPaymentBelum = filteredPayment
         .where((payment) => payment.status.toLowerCase() == "selesai")
         .toList();
@@ -546,7 +547,7 @@ Widget _buildPaymentCard(dynamic pesanan,
 
                     // Gunakan XFile dalam shareXFiles
                     await Share.shareXFiles([xFile],
-                        text: 'Invoice ${pesanan.orderId}');
+                        text: 'Membagikan Invoice ${pesanan.orderId}');
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Gagal membagikan invoice')),

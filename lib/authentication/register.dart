@@ -46,14 +46,14 @@ class RegisterPageState extends State<RegisterPage> {
       );
       Navigator.pushNamed(context, '/login');
     } else {
-      final errors = result['errors'];
+      final errors = result['errors'] ?? {};
 
       setState(() {
         // Memastikan kita tidak mengalami NoSuchMethodError dengan memeriksa apakah errors null
-        _nameError = errors?['name']?.first;
-        _emailError = errors?['email']?.first;
-        _phoneError = errors?['phone_number']?.first;
-        _passwordError = errors?['password']?.first;
+        _nameError = errors?['name']?.first ?? null;
+        _emailError = errors?['email']?.first ?? null;
+        _phoneError = errors?['phone_number']?.first ?? null;
+        _passwordError = errors?['password']?.first ?? null;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,6 +65,7 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Stack(
         children: [

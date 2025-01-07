@@ -467,7 +467,10 @@ Widget _buildPaymentCard(dynamic pesanan,
                         DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(
                             DateTime.parse(pesanan.booking.date.toString()))),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Metode Pembayaran', pesanan.bank.bankName),
+                    _buildDetailRow(
+                        'Metode Pembayaran',
+                        pesanan.bank?.bankName ??
+                            'Metode pembayaran tidak tersedia'),
                     const SizedBox(height: 8),
                     _buildDetailRow('Status', pesanan.status),
                     const SizedBox(height: 8),

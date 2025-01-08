@@ -621,4 +621,59 @@ class ApiService {
       return {'success': false, 'errors': errorData};
     }
   }
+
+  // Add this method to your ApiService class
+  Future<Map<String, dynamic>> addBank({
+    required String bankName,
+    required String accountNumber,
+    required String fieldCentreId,
+    required String userId,
+  }) async {
+    try {
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      final url = Uri.parse('$baseUrl/bank');
+      
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'bank_name': bankName,
+          'account_number': accountNumber,
+          'field_centre_id': int.parse(fieldCentreId),
+          'user_id': int.parse(userId),
+        }),
+      );
+      
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      if (response.statusCode == 201) {
+        final responseData = jsonDecode(response.body);
+        return {
+          'success': true,
+          'data': responseData['data'],
+          'message': responseData['message'],
+        };
+      } else {
+        final errorData = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': errorData['message'] ?? 'Failed to add bank account',
+          'errors': errorData['errors'],
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Error: $e',
+      };
+    }
+  }
 }

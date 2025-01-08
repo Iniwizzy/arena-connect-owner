@@ -36,9 +36,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // await Firebase.initializeApp();
-  // runApp(const MainApp());
+  runApp(const MainApp());
 
-  runApp(DevicePreview(builder: (context) => const MainApp()));
+  // runApp(DevicePreview(builder: (context) => const MainApp()));
 }
 
 class MainApp extends StatelessWidget {

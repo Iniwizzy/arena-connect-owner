@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 // class Pembayaran extends StatelessWidget {
 //   const Pembayaran({super.key});
@@ -51,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         Uri.parse("$baseUrl/payments"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resFieldFromJson(res.body).data;
+      List<Payment>? data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
         listPayment = data ?? [];
@@ -117,6 +119,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget build(BuildContext context) {
+    initializeDateFormatting('id_ID', null);
     List<dynamic> filteredPaymentBelum = filteredPayment
         .where((payment) => payment.status.toLowerCase() == "selesai")
         .toList();
@@ -459,9 +462,15 @@ Widget _buildPaymentCard(dynamic pesanan,
                   children: [
                     _buildDetailRow('Nomor Invoice', pesanan.orderId),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Tanggal', pesanan.booking.date),
+                    _buildDetailRow(
+                        'Tanggal',
+                        DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(
+                            DateTime.parse(pesanan.booking.date.toString()))),
                     const SizedBox(height: 8),
-                    _buildDetailRow('Metode Pembayaran', pesanan.paymentMethod),
+                    _buildDetailRow(
+                        'Metode Pembayaran',
+                        pesanan.bank?.bankName ??
+                            'Metode pembayaran tidak tersedia'),
                     const SizedBox(height: 8),
                     _buildDetailRow('Status', pesanan.status),
                     const SizedBox(height: 8),
@@ -541,7 +550,7 @@ Widget _buildPaymentCard(dynamic pesanan,
 
                     // Gunakan XFile dalam shareXFiles
                     await Share.shareXFiles([xFile],
-                        text: 'Invoice ${pesanan.orderId}');
+                        text: 'Membagikan Invoice ${pesanan.orderId}');
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Gagal membagikan invoice')),

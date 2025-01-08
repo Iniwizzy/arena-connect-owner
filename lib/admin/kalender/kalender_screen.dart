@@ -35,7 +35,7 @@ class _KalenderScreenState extends State<KalenderScreen> {
         Uri.parse("$baseUrl/payments"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resFieldFromJson(res.body).data;
+      List<Payment>? data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
         listBooking = data ?? [];

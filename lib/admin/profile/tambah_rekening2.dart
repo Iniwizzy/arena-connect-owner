@@ -163,7 +163,7 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
             size: 18,
           ),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/profil');
           },
         ),
       ),

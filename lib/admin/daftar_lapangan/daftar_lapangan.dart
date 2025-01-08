@@ -191,34 +191,36 @@ class _ListFieldsState extends State<ListFields> {
                                     filteredField[index].fieldCentre.address,
                                     style: ketStyle,
                                   ),
-                                  const SizedBox(height: 5),
-                                  // Row(
-                                  //   children: filteredField[index]
-                                  //       .type
-                                  //       .map((facility) {
-                                  //     return Container(
-                                  //       margin: const EdgeInsets.only(right: 8),
-                                  //       padding: const EdgeInsets.symmetric(
-                                  //           horizontal: 8, vertical: 2),
-                                  //       decoration: BoxDecoration(
-                                  //         color: Colors.grey.withOpacity(0.2),
-                                  //         borderRadius:
-                                  //             BorderRadius.circular(5),
-                                  //       ),
-                                  //       child: Row(
-                                  //         children: [
-                                  //           // Use switch to match enum types
-                                  //           _getIconForFieldType(facility),
-                                  //           const SizedBox(width: 5),
-                                  //           Text(
-                                  //             facility
-                                  //                 .toString()
-                                  //                 .split('.')
-                                  //                 .last,
-                                  //             style: facilityStle,
-                                  //             textAlign: TextAlign.center,
-                                  //           ),
-                                  
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(right: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.withOpacity(0.2),
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            _getIconForFieldType(filteredField[
+                                                    index]
+                                                .type), // Langsung gunakan string type
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              filteredField[index]
+                                                  .type, // Langsung gunakan string type
+                                              style: facilityStle.copyWith(
+                                                  fontSize: 12.0),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   const SizedBox(height: 5),
                                   Row(
                                     mainAxisAlignment:
@@ -229,7 +231,7 @@ class _ListFieldsState extends State<ListFields> {
                                         style: const TextStyle(
                                           fontFamily: 'Source Sans Pro',
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 12,
+                                          fontSize: 15,
                                           color: Colors.black,
                                         ),
                                       ),
@@ -240,24 +242,24 @@ class _ListFieldsState extends State<ListFields> {
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 5),
-                                  Center(
-                                    child: SizedBox(
-                                      width: 200,
-                                      child: SizedBox(
-                                        height: 40,
-                                        child: ElevatedButton(
-                                          onPressed: () {},
-                                          style: shortButton3,
-                                          child: Text(
-                                            'Lihat Status Lapangan',
-                                            style: buttonTextStyle,
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                                  // const SizedBox(height: 5),
+                                  // Center(
+                                  //   child: SizedBox(
+                                  //     width: 200,
+                                  //     child: SizedBox(
+                                  //       height: 40,
+                                  //       child: ElevatedButton(
+                                  //         onPressed: () {},
+                                  //         style: shortButton3,
+                                  //         child: Text(
+                                  //           'Lihat Status Lapangan',
+                                  //           style: buttonTextStyle,
+                                  //           textAlign: TextAlign.center,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),
@@ -267,6 +269,21 @@ class _ListFieldsState extends State<ListFields> {
                     );
                   }))
     ]));
+  }
+
+  Widget _getIconForFieldType(String type) {
+    switch (type.toLowerCase()) {
+      case 'Futsal':
+        return const Icon(Icons.sports_soccer, size: 10);
+      case 'Basket':
+        return const Icon(Icons.sports_basketball, size: 10);
+      case 'Voli':
+        return const Icon(Icons.sports_volleyball, size: 10);
+      case 'Badminton':
+        return const Icon(Icons.sports_tennis, size: 10);
+      default:
+        return const Icon(Icons.sports, size: 10);
+    }
   }
 
   Widget searchBar() {

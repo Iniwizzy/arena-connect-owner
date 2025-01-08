@@ -655,7 +655,6 @@ class ApiService {
       
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
-
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         return {

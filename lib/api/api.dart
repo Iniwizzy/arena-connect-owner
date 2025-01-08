@@ -8,8 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arena_connect/customer/models/booking.dart' as booking;
 
 // const String baseUrl = 'http://localhost:8000/api';
-const String baseUrl = 'http://103.150.117.116/api';
-const String imageUrl = 'http://103.150.117.116/storage/receipts/';
+const String baseUrl = 'https://arenaconnect.site/api';
+const String imageUrl = 'https://arenaconnect.site/storage/receipts/';
 
 class ApiService {
   Future<Map<String, dynamic>> register(
@@ -87,6 +87,11 @@ class ApiService {
   Future<String?> getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('token');
+  }
+
+  Future<String?> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('user_id');
   }
 
   Future<Map<String, dynamic>> getFacilities() async {
@@ -569,7 +574,7 @@ class ApiService {
       }
 
       final response = await http.get(
-        Uri.parse('http://127.0.0.1:8000/api/payments/$paymentId'),
+        Uri.parse("$baseUrl/payments/$paymentId"),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

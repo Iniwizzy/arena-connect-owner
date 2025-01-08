@@ -67,113 +67,121 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 16),
-              _buildFormField(
-                "Nama Lengkap",
-                _namaController,
-                TextInputType.name,
-              ),
-              const SizedBox(height: 10),
-              _buildBankDropdown(),
-              const SizedBox(height: 10),
-              _buildFormField(
-                "No. Rekening",
-                _noRekeningController,
-                TextInputType.number,
-              ),
-              const SizedBox(height: 16),
-              const Divider(color: Colors.grey),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    "Atur Sebagai Rekening Utama",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Color(0xFF12215C),
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isRekeningUtama = !_isRekeningUtama;
-                      });
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 200),
-                      width: 50,
-                      height: 28,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: _isRekeningUtama
-                            ? const Color(0xFF489DD6)
-                            : const Color(0xFFE0E0E0),
-                        borderRadius: BorderRadius.circular(20),
+        child: SingleChildScrollView(
+          // Add this wrapper
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                _buildFormField(
+                  "Nama Lengkap",
+                  _namaController,
+                  TextInputType.name,
+                ),
+                const SizedBox(height: 10),
+                _buildBankDropdown(),
+                const SizedBox(height: 10),
+                _buildFormField(
+                  "No. Rekening",
+                  _noRekeningController,
+                  TextInputType.number,
+                ),
+                const SizedBox(height: 16),
+                const Divider(color: Colors.grey),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Atur Sebagai Rekening Utama",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color(0xFF12215C),
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: Row(
-                        mainAxisAlignment: _isRekeningUtama
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.white,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isRekeningUtama = !_isRekeningUtama;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 50,
+                        height: 28,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: _isRekeningUtama
+                              ? const Color(0xFF489DD6)
+                              : const Color(0xFFE0E0E0),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: _isRekeningUtama
+                              ? MainAxisAlignment.end
+                              : MainAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 10,
+                              backgroundColor: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF489DD6),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      elevation: 5,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate() &&
+                          selectedBank != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const KonfirmasiInformasiBankScreen(),
                           ),
-                        ],
+                        );
+                      } else if (selectedBank == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Silakan pilih bank terlebih dahulu'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                        const SizedBox(
+                          height: 20,
+                        );
+                      }
+                    },
+                    child: const Text(
+                      "SIMPAN",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF489DD6),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    elevation: 5,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate() &&
-                        selectedBank != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const KonfirmasiInformasiBankScreen(),
-                        ),
-                      );
-                    } else if (selectedBank == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Silakan pilih bank terlebih dahulu'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text(
-                    "SIMPAN",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

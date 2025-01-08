@@ -31,12 +31,15 @@ import 'package:arena_connect/customer/screens/search/sparring_search.dart';
 import 'package:arena_connect/homescreen.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // await Firebase.initializeApp();
   runApp(const MainApp());
+  await initializeDateFormatting('id_ID', null);
 
   // runApp(DevicePreview(builder: (context) => const MainApp()));
 }

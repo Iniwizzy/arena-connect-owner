@@ -24,27 +24,48 @@ class _ListFieldsState extends State<ListFields> {
       setState(() {
         isLoading = true;
       });
+
       String? token = await ApiService().getToken();
+      String? userId = await ApiService().getUserId();
+
+      debugPrint('User ID: $userId');
+
       if (token == null) {
         throw Exception('Token not found');
       }
+
       http.Response res = await http.get(
         Uri.parse("$baseUrl/fields"),
         headers: {'Authorization': 'Bearer $token'},
       );
+
       List<Field>? data = resFieldFromJson(res.body).data;
+
+      // Filter lapangan berdasarkan field_centre_id yang sama dengan userId
+      List<Field> userFields = data?.where((field) {
+            // Konversi userId ke integer untuk perbandingan yang tepat
+            int? userIdInt = int.tryParse(userId ?? '');
+            debugPrint(
+                'Comparing field.fieldCentreId: ${field.fieldCentreId} with userId: $userIdInt');
+            return field.fieldCentreId == userIdInt;
+          }).toList() ??
+          [];
+
+      debugPrint('Filtered fields length: ${userFields.length}');
+
       setState(() {
         isLoading = false;
-        listField = data ?? [];
+        listField = userFields;
         filteredField = listField;
       });
     } catch (e) {
+      debugPrint('Error: $e');
       setState(() {
         isLoading = false;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         );
       });
@@ -71,6 +92,10 @@ class _ListFieldsState extends State<ListFields> {
 
   @override
   Widget build(BuildContext context) {
+    // List<dynamic> filteredFieldUser = filteredField
+    //     .where((field) => field.name == field.fieldCentreId)
+    //     .toList();
+    // debugPrint(filteredFieldUser as String?);
     return Scaffold(
         body: Column(children: [
       Container(

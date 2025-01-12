@@ -21,7 +21,7 @@ class _TambahLapanganState extends State<TambahLapangan> {
   final TextEditingController _descriptionsController = TextEditingController();
 
   String _selectedType = 'Futsal';
-  bool _isAvailable = true; // Changed to boolean
+  bool _isAvailable = false; // Changed to boolean
   bool isSubmitting = false;
 
   final List<String> _types = ['Futsal', 'Badminton'];

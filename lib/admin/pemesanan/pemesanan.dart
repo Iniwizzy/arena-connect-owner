@@ -54,7 +54,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   // List<FieldCentre> filteredFieldCentre = [];
   String searchQuery = '';
 
-  Future<void> getField() async {
+  Future<void> getPesanan() async {
     try {
       setState(() {
         isLoading = true;
@@ -103,7 +103,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
           content: Text('Status berhasil diubah ke $status.'),
           backgroundColor: Colors.green,
         ));
-        getField(); // Refresh list
+        getPesanan(); // Refresh list
         debugPrint(response.body);
       } else {
         debugPrint(response.body);
@@ -121,7 +121,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
   @override
   void initState() {
     super.initState();
-    getField();
+    getPesanan();
   }
 
   @override

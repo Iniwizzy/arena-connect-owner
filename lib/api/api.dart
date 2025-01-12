@@ -46,15 +46,34 @@ class ApiService {
       }),
     );
 
+    // Debug: Cetak status code dan body respons
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
+
     if (response.statusCode == 200) {
       final responseData = jsonDecode(response.body);
       SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      // Simpan token dan user_id
       await prefs.setString('token', responseData['token']);
       await prefs.setString('user_id', responseData['user']['id'].toString());
+
+      // Ambil field_centre_id dari respons
+      if (responseData['field-centre-id'] != null) {
+        await prefs.setString(
+            'field_centre_id', responseData['field-centre-id'].toString());
+      } else {
+        // Jika tidak ada field-centre-id, Anda bisa menangani sesuai kebutuhan
+        print('Field centre ID tidak ditemukan dalam respons.');
+      }
+
       return {
         'success': true,
         'token': responseData['token'],
-        'data': User.fromJson(responseData['user'])
+        'data': User.fromJson(responseData['user']),
+        'fieldCentreId': responseData['field-centre-id'] != null
+            ? responseData['field-centre-id'] // Ambil ID dari field-centre-id
+            : null, // Atur null jika tidak ada field-centre-id
       };
     } else {
       final errorData = jsonDecode(response.body);
@@ -92,6 +111,11 @@ class ApiService {
   Future<String?> getUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('user_id');
+  }
+
+  Future<String?> getFieldCentreId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('field_centre_id');
   }
 
   Future<Map<String, dynamic>> getFacilities() async {
@@ -643,7 +667,7 @@ class ApiService {
       }
 
       final url = Uri.parse('$baseUrl/bank');
-      
+
       final response = await http.post(
         url,
         headers: {
@@ -657,7 +681,7 @@ class ApiService {
           'user_id': int.parse(userId),
         }),
       );
-      
+
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
       if (response.statusCode == 201) {

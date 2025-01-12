@@ -88,6 +88,12 @@ class _TambahLapanganState extends State<TambahLapangan> {
       print('Add Field Result: $result');
 
       if (result['success']) {
+        // Ambil fieldCentreId dari data respons
+        var newFieldCentreId = result['data']['field_centre_id'];
+        // Pastikan newFieldCentreId adalah String
+        String? fieldCentreIdString = newFieldCentreId.toString();
+        print('New Field Centre ID: $fieldCentreIdString');
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(result['message'] ?? 'Lapangan berhasil ditambahkan'),

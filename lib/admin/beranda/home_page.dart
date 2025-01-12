@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:arena_connect/admin/model/res_payments.dart';
 import 'package:arena_connect/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:arena_connect/admin/config/theme.dart';
@@ -17,7 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String userName = '';
   String userEmail = '';
-  String totalPendapatan = '';
+  int totalPendapatan = 0;
   int totalTransaksi = 0;
   bool isLoading = false;
 
@@ -25,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getUser();
-    getTotalRevenue();
+    getField();
   }
 
   Future<void> _getUser() async {
@@ -46,21 +47,57 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> getTotalRevenue() async {
+  Future<void> getField() async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/total-revenue"));
+      setState(() {
+        isLoading = true;
+      });
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          totalPendapatan = data['total_revenue'];
-          totalTransaksi = data['total_transaksi'];
-        });
-      } else {
-        throw Exception('Failed to load total revenue');
+      // Ambil token dan userId
+      String? token = await ApiService().getToken();
+      String? userId = await ApiService().getUserId();
+
+      if (token == null || userId == null) {
+        throw Exception('Token or UserId not found');
       }
+
+      // Lakukan request
+      final response = await http.get(
+        Uri.parse("$baseUrl/payment/user/$userId"),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      // Parse response
+      final jsonResponse = json.decode(response.body);
+
+      if (!jsonResponse['success']) {
+        throw Exception(jsonResponse['message'] ?? 'Failed to load data');
+      }
+
+      // Parse data payments
+      List<Payment> payments = (jsonResponse['data'] as List)
+          .map((item) => Payment.fromJson(item))
+          .toList();
+
+      setState(() {
+        isLoading = false;
+        totalPendapatan = jsonResponse['total_revenue'] ?? 0.0;
+        totalTransaksi = jsonResponse['total_transaksi'] ?? 0;
+      });
     } catch (e) {
-      throw Exception('Error: $e');
+      setState(() {
+        isLoading = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red, // Ubah ke merah untuk error
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
     }
   }
 
@@ -91,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pushNamed(context, '/search');
+                        Navigator.pushNamed(context, '');
                       },
                       borderRadius: BorderRadius.circular(50),
                       highlightColor: Colors.white.withOpacity(0.2),
@@ -299,7 +336,7 @@ Widget _listBar(BuildContext context) {
 }
 
 Widget _ringkasan(BuildContext context,
-    {required String totalPendapatan, required int totalTransaksi}) {
+    {required int totalPendapatan, required int totalTransaksi}) {
   return SizedBox(
       child: Padding(
           // color: Colors.red,
@@ -351,23 +388,16 @@ Widget _ringkasan(BuildContext context,
           )));
 }
 
-String formatCurrency(String value) {
-  double doubleValue = double.tryParse(value) ?? 0.0;
+// Fungsi format currency
+String formatCurrency(int? amount) {
+  if (amount == null) return 'Rp 0';
 
   final formatter = NumberFormat.currency(
     locale: 'id_ID',
-    symbol: '', // Tidak menampilkan simbol mata uang
-    decimalDigits: 2, // Tampilkan maksimal 2 desimal
+    symbol: 'Rp ',
+    decimalDigits: 0,
   );
-
-  String formatted = formatter.format(doubleValue);
-
-  // Hapus trailing ".00" jika ada
-  if (formatted.endsWith('.00')) {
-    formatted = formatted.replaceAll('.00', '');
-  }
-
-  return formatted.trim();
+  return formatter.format(amount);
 }
 
 Widget _ringkasanTransaksi(

@@ -18,7 +18,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
   bool isLoading = false;
   List<Payment> listLaporan = [];
   List<Payment> filteredLaporan = [];
-  String totalPendapatan = '';
+  int totalPendapatan = 0;
   int totalTransaksi = 0;
   String selectedMonth = '';
 
@@ -27,57 +27,81 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       setState(() {
         isLoading = true;
       });
+
+      // Ambil token dan userId
       String? token = await ApiService().getToken();
-      if (token == null) {
-        throw Exception('Token not found');
+      String? userId = await ApiService().getUserId();
+
+      if (token == null || userId == null) {
+        throw Exception('Token or UserId not found');
       }
-      http.Response res = await http.get(
-        Uri.parse("$baseUrl/payments"),
+
+      // Lakukan request
+      final response = await http.get(
+        Uri.parse("$baseUrl/payment/user/$userId"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resPaymentFromJson(res.body).data;
+
+      // Parse response
+      final jsonResponse = json.decode(response.body);
+
+      if (!jsonResponse['success']) {
+        throw Exception(jsonResponse['message'] ?? 'Failed to load data');
+      }
+
+      // Parse data payments
+      List<Payment> payments = (jsonResponse['data'] as List)
+          .map((item) => Payment.fromJson(item))
+          .toList();
+
       setState(() {
         isLoading = false;
-        listLaporan = data ?? [];
-        filteredLaporan = listLaporan;
+        listLaporan = payments;
+        filteredLaporan = payments;
+        totalPendapatan = jsonResponse['total_revenue'] ?? 0.0;
+        totalTransaksi = jsonResponse['total_transaksi'] ?? 0;
       });
     } catch (e) {
       setState(() {
         isLoading = false;
+      });
+
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.green,
+            content: Text('Error: ${e.toString()}'),
+            backgroundColor: Colors.red, // Ubah ke merah untuk error
+            duration: const Duration(seconds: 3),
           ),
         );
-      });
-    }
-  }
-
-  Future<void> getTotalRevenue() async {
-    try {
-      final response = await http.get(Uri.parse("$baseUrl/total-revenue"));
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        setState(() {
-          totalPendapatan = data['total_revenue'];
-          totalTransaksi = data['total_transaksi'];
-        });
-      } else {
-        throw Exception('Failed to load total revenue');
       }
-    } catch (e) {
-      throw Exception('Error: $e');
     }
   }
+
+  // Future<void> getTotalRevenue() async {
+  //   try {
+  //     final response = await http.get(Uri.parse("$baseUrl/total-revenue"));
+
+  //     if (response.statusCode == 200) {
+  //       final data = jsonDecode(response.body);
+  //       setState(() {
+  //         totalPendapatan = data['total_revenue'];
+  //         totalTransaksi = data['total_transaksi'];
+  //       });
+  //     } else {
+  //       throw Exception('Failed to load total revenue');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error: $e');
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
     selectedMonth = DateFormat('MMMM yyyy', 'id_ID').format(DateTime.now());
     getField();
-    getTotalRevenue();
+    // getTotalRevenue();
   }
 
   Map<String, List<Payment>> groupTransactionsByMonth(
@@ -196,8 +220,8 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Rp ${formatCurrency(totalPendapatan)}',
-                          style: const TextStyle(
+                          formatCurrency1(totalPendapatan),
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -416,6 +440,18 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
       bottomNavigationBar: _BottomNavigation(context),
     );
   }
+}
+
+// Fungsi format currency
+String formatCurrency1(int? amount) {
+  if (amount == null) return 'Rp 0';
+
+  final formatter = NumberFormat.currency(
+    locale: 'id_ID',
+    symbol: 'Rp ',
+    decimalDigits: 0,
+  );
+  return formatter.format(amount);
 }
 
 String formatCurrency(String value) {

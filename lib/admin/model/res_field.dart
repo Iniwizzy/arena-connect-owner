@@ -4,8 +4,6 @@
 
 import 'dart:convert';
 
-import 'package:decimal/decimal.dart';
-
 ResField resFieldFromJson(String str) => ResField.fromJson(json.decode(str));
 
 String resFieldToJson(ResField data) => json.encode(data.toJson());
@@ -34,9 +32,6 @@ class ResField {
       };
 }
 
-// // ignore: constant_identifier_names
-// enum FieldType { Futsal, Badminton, Volley, Basketball }
-
 class Field {
   int id;
   String name;
@@ -44,9 +39,11 @@ class Field {
   String type;
   String descriptions;
   String status;
-  DateTime createdAt;
-  DateTime updatedAt;
-  FieldCentre fieldCentre;
+  List<Price> price;
+  List<Schedule> schedules;
+  String address;
+  String priceFrom;
+  List<String> images;
 
   Field({
     required this.id,
@@ -55,36 +52,26 @@ class Field {
     required this.type,
     required this.descriptions,
     required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.fieldCentre,
+    required this.price,
+    required this.schedules,
+    required this.address,
+    required this.priceFrom,
+    required this.images,
   });
-
-  // // Custom method to convert string to FieldType enum
-  // static FieldType _parseFieldType(String typeString) {
-  //   return FieldType.values.firstWhere(
-  //     (e) =>
-  //         e.toString().split('.').last.toLowerCase() ==
-  //         typeString.toLowerCase(),
-  //     orElse: () => FieldType.Badminton, // Default value if not found
-  //   );
-  // }
 
   factory Field.fromJson(Map<String, dynamic> json) => Field(
         id: json["id"],
         name: json["name"],
         fieldCentreId: json["field_centre_id"],
-        // Convert string types to enum types
-        type: json['type'],
-        // ? (json['type'] as List)
-        //     .map((typeString) => _parseFieldType(typeString))
-        //     .toList()
-        // : [],
+        type: json["type"],
         descriptions: json["descriptions"],
         status: json["status"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        fieldCentre: FieldCentre.fromJson(json["field_centre"]),
+        price: List<Price>.from(json["price"].map((x) => Price.fromJson(x))),
+        schedules: List<Schedule>.from(
+            json["schedules"].map((x) => Schedule.fromJson(x))),
+        address: json["address"],
+        priceFrom: json["price_from"],
+        images: List<String>.from(jsonDecode(json["images.*"])),
       );
 
   Map<String, dynamic> toJson() => {
@@ -94,40 +81,67 @@ class Field {
         "type": type,
         "descriptions": descriptions,
         "status": status,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "field_centre": fieldCentre.toJson(),
+        "price": List<dynamic>.from(price.map((x) => x.toJson())),
+        "schedules": List<dynamic>.from(schedules.map((x) => x.toJson())),
+        "address": address,
+        "price_from": priceFrom,
+        "images.*": jsonEncode(images),
       };
 }
 
-class FieldCentre {
-  int id;
-  String name;
-  String address;
-  Decimal priceFrom;
-  List<String> images;
+class Price {
+  int fieldId;
+  String priceFrom;
+  String priceTo;
 
-  FieldCentre({
-    required this.id,
-    required this.name,
-    required this.address,
+  Price({
+    required this.fieldId,
     required this.priceFrom,
-    required this.images,
+    required this.priceTo,
   });
 
-  factory FieldCentre.fromJson(Map<String, dynamic> json) => FieldCentre(
-        id: json["id"],
-        name: json["name"],
-        address: json["address"],
-        priceFrom: Decimal.parse(json["price_from"].toString()),
-        images: List<String>.from(jsonDecode(json["images"])),
+  factory Price.fromJson(Map<String, dynamic> json) => Price(
+        fieldId: json["field_id"],
+        priceFrom: json["price_from"],
+        priceTo: json["price_to"],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "address": address,
+        "field_id": fieldId,
         "price_from": priceFrom,
-        "images": jsonEncode(images),
+        "price_to": priceTo,
+      };
+}
+
+class Schedule {
+  int fieldId;
+  DateTime date;
+  String startTime;
+  String endTime;
+  int isBooked;
+
+  Schedule({
+    required this.fieldId,
+    required this.date,
+    required this.startTime,
+    required this.endTime,
+    required this.isBooked,
+  });
+
+  factory Schedule.fromJson(Map<String, dynamic> json) => Schedule(
+        fieldId: json["field_id"],
+        date: DateTime.parse(json["date"]),
+        startTime: json["start_time"],
+        endTime: json["end_time"],
+        isBooked: json["is_booked"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "field_id": fieldId,
+        "date":
+            "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
+        "start_time": startTime,
+        "end_time": endTime,
+        "is_booked": isBooked,
       };
 }

@@ -35,27 +35,15 @@ class _ListFieldsState extends State<ListFields> {
       }
 
       http.Response res = await http.get(
-        Uri.parse("$baseUrl/fields"),
+        Uri.parse("$baseUrl/field-centres/user/$userId"),
         headers: {'Authorization': 'Bearer $token'},
       );
 
       List<Field>? data = resFieldFromJson(res.body).data;
 
-      // Filter lapangan berdasarkan field_centre_id yang sama dengan userId
-      List<Field> userFields = data?.where((field) {
-            // Konversi userId ke integer untuk perbandingan yang tepat
-            int? userIdInt = int.tryParse(userId ?? '');
-            debugPrint(
-                'Comparing field.fieldCentreId: ${field.fieldCentreId} with userId: $userIdInt');
-            return field.fieldCentreId == userIdInt;
-          }).toList() ??
-          [];
-
-      debugPrint('Filtered fields length: ${userFields.length}');
-
       setState(() {
         isLoading = false;
-        listField = userFields;
+        listField = data ?? [];
         filteredField = listField;
       });
     } catch (e) {
@@ -174,9 +162,8 @@ class _ListFieldsState extends State<ListFields> {
                                       borderRadius: const BorderRadius.vertical(
                                           top: Radius.circular(8.0)),
                                       image: DecorationImage(
-                                        image: NetworkImage(filteredField[index]
-                                            .fieldCentre
-                                            .images[1]),
+                                        image: NetworkImage(
+                                            filteredField[index].images[1]),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -213,7 +200,7 @@ class _ListFieldsState extends State<ListFields> {
                                     style: lampiranStyle,
                                   ),
                                   Text(
-                                    filteredField[index].fieldCentre.address,
+                                    filteredField[index].address,
                                     style: ketStyle,
                                   ),
                                   const SizedBox(height: 8),
@@ -252,7 +239,7 @@ class _ListFieldsState extends State<ListFields> {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Mulai Rp.${filteredField[index].fieldCentre.priceFrom}/Jam',
+                                        'Mulai Rp.${filteredField[index].priceFrom}/Jam',
                                         style: const TextStyle(
                                           fontFamily: 'Source Sans Pro',
                                           fontWeight: FontWeight.w700,

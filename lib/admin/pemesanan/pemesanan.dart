@@ -60,14 +60,18 @@ class _OrderListScreenState extends State<OrderListScreen> {
         isLoading = true;
       });
       String? token = await ApiService().getToken();
+      String? userId = await ApiService().getUserId();
+
+      debugPrint('User ID: $userId');
+
       if (token == null) {
         throw Exception('Token not found');
       }
       http.Response res = await http.get(
-        Uri.parse("$baseUrl/payments"),
+        Uri.parse("$baseUrl/payment/user/$userId"),
         headers: {'Authorization': 'Bearer $token'},
       );
-      List<Payment>? data = resPaymentFromJson(res.body).data;
+      List<Payment> data = resPaymentFromJson(res.body).data;
       setState(() {
         isLoading = false;
         listBooking = data ?? [];
@@ -79,7 +83,7 @@ class _OrderListScreenState extends State<OrderListScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         );
       });

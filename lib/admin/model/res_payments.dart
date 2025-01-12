@@ -12,23 +12,31 @@ String resPaymentToJson(ResPayment data) => json.encode(data.toJson());
 class ResPayment {
   bool success;
   String message;
+  int totalRevenue;
+  int totalTransaksi;
   List<Payment> data;
 
   ResPayment({
     required this.success,
     required this.message,
+    required this.totalRevenue,
+    required this.totalTransaksi,
     required this.data,
   });
 
   factory ResPayment.fromJson(Map<String, dynamic> json) => ResPayment(
         success: json["success"],
         message: json["message"],
+        totalRevenue: json["total_revenue"],
+        totalTransaksi: json["total_transaksi"],
         data: List<Payment>.from(json["data"].map((x) => Payment.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "message": message,
+        "total_revenue": totalRevenue,
+        "total_transaksi": totalTransaksi,
         "data": List<dynamic>.from(data.map((x) => x.toJson())),
       };
 }
@@ -41,9 +49,7 @@ class Payment {
   int paymentId;
   String status;
   String orderId;
-  String? receipt;
-  DateTime createdAt;
-  DateTime updatedAt;
+  String receipt;
   Field field;
   Booking booking;
   User user;
@@ -58,8 +64,6 @@ class Payment {
     required this.status,
     required this.orderId,
     required this.receipt,
-    required this.createdAt,
-    required this.updatedAt,
     required this.field,
     required this.booking,
     required this.user,
@@ -75,8 +79,6 @@ class Payment {
         status: json["status"],
         orderId: json["order_id"],
         receipt: json["receipt"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
         field: Field.fromJson(json["field"]),
         booking: Booking.fromJson(json["booking"]),
         user: User.fromJson(json["user"]),
@@ -92,8 +94,6 @@ class Payment {
         "status": status,
         "order_id": orderId,
         "receipt": receipt,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
         "field": field.toJson(),
         "booking": booking.toJson(),
         "user": user.toJson(),
@@ -150,7 +150,6 @@ class Booking {
         bookingStart: json["booking_start"],
         bookingEnd: json["booking_end"],
         date: DateTime.parse(json["date"]),
-        // date: json["date"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -158,7 +157,6 @@ class Booking {
         "field_id": fieldId,
         "booking_start": bookingStart,
         "booking_end": bookingEnd,
-        // "date": date,
         "date":
             "${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
       };

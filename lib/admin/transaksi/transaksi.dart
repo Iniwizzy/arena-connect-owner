@@ -46,11 +46,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
         isLoading = true;
       });
       String? token = await ApiService().getToken();
+      String? userId = await ApiService().getUserId();
       if (token == null) {
         throw Exception('Token not found');
       }
       http.Response res = await http.get(
-        Uri.parse("$baseUrl/payments"),
+        Uri.parse("$baseUrl/payment/user/$userId"),
         headers: {'Authorization': 'Bearer $token'},
       );
       List<Payment>? data = resPaymentFromJson(res.body).data;
@@ -65,7 +66,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString()),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.red,
           ),
         );
       });

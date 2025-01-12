@@ -28,11 +28,12 @@ class _KalenderScreenState extends State<KalenderScreen> {
         isLoading = true;
       });
       String? token = await ApiService().getToken();
+      String? userId = await ApiService().getUserId();
       if (token == null) {
         throw Exception('Token not found');
       }
       http.Response res = await http.get(
-        Uri.parse("$baseUrl/payments"),
+        Uri.parse("$baseUrl/payment/user/$userId"),
         headers: {'Authorization': 'Bearer $token'},
       );
       List<Payment>? data = resPaymentFromJson(res.body).data;

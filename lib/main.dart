@@ -8,6 +8,7 @@ import 'package:arena_connect/admin/daftar_lapangan/mendaftar_lapangan.dart';
 import 'package:arena_connect/admin/daftar_lapangan/tambah_lapangan.dart';
 import 'package:arena_connect/admin/kalender/kalender_detail.dart';
 import 'package:arena_connect/admin/kalender/kalender_screen.dart';
+import 'package:arena_connect/admin/kompetisi/kompetisi.dart';
 import 'package:arena_connect/admin/laporan_keuangan/laporan.dart';
 import 'package:arena_connect/admin/notif/notifikasi.dart';
 import 'package:arena_connect/admin/pemesanan/pemesanan.dart';
@@ -87,6 +88,7 @@ class MainApp extends StatelessWidget {
         '/kebijakanprivasi': (context) => const PrivacyPolicyScreen(),
         '/rekening': (context) => const TambahRekeningScreen(),
         // '/validasi': (context) => const ValidasiPesanan()
+        '/kompetisi': (context) => KompetisiPage(),
         '/profile': (context) => const BottomNavWrapper(child: ProfilePage()),
         '/search': (context) => const BottomNavWrapper(child: SparringSearch()),
         '/history': (context) => BottomNavWrapper(child: HistoryScreen()),

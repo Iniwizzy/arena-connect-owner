@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:ui';
 import 'package:arena_connect/admin/model/res_payments.dart';
 import 'package:arena_connect/api/api.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +21,14 @@ class _HomePageState extends State<HomePage> {
   int totalPendapatan = 0;
   int totalTransaksi = 0;
   bool isLoading = false;
+  List<Payment> listBooking = [];
+  List<Payment> filteredBooking = [];
 
   @override
   void initState() {
     super.initState();
     _getUser();
-    getField();
+    getPesanan();
   }
 
   Future<void> _getUser() async {
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> getField() async {
+  Future<void> getPesanan() async {
     try {
       setState(() {
         isLoading = true;
@@ -81,6 +83,8 @@ class _HomePageState extends State<HomePage> {
 
       setState(() {
         isLoading = false;
+        listBooking = payments ?? [];
+        filteredBooking = listBooking;
         totalPendapatan = jsonResponse['total_revenue'] ?? 0.0;
         totalTransaksi = jsonResponse['total_transaksi'] ?? 0;
       });
@@ -230,7 +234,7 @@ class _HomePageState extends State<HomePage> {
                           totalTransaksi: totalTransaksi,
                         ),
                         const SizedBox(height: 30),
-                        _pemesanan(context),
+                        _pemesanan(context, filteredBooking),
                       ],
                     ),
                   ),
@@ -443,7 +447,7 @@ Widget _ringkasanTransaksi(
   );
 }
 
-Widget _pemesanan(BuildContext context) {
+Widget _pemesanan(BuildContext context, List<Payment> filteredBooking) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 34),
     child: Column(
@@ -490,103 +494,128 @@ Widget _pemesanan(BuildContext context) {
         ),
         const SizedBox(height: 16),
         // List of Pesanan
-        _riwayatpesanan(context),
+        _riwayatpesanan(context, filteredBooking),
       ],
     ),
   );
 }
 
-Widget _riwayatpesanan(BuildContext context) {
-  return Container(
-    margin: const EdgeInsets.symmetric(vertical: 8),
-    decoration: BoxDecoration(
-      color: const Color(0xFF12215C), // Dark blue background
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 10,
-          offset: const Offset(0, 4),
+Widget _riwayatpesanan(BuildContext context, List<Payment> filteredBooking) {
+  // Filter dan limit data
+  // Filter untuk satu pesanan terbaru
+  List<dynamic> filteredBookingBelum = filteredBooking
+      .where((payment) => payment.status.toLowerCase() == "proses")
+      .toList()
+    ..sort((a, b) => DateTime.parse(b.booking.date.toString())
+        .compareTo(DateTime.parse(a.booking.date.toString())));
+
+  // Ambil satu data terbaru
+  filteredBookingBelum = filteredBookingBelum.take(1).toList();
+
+  return SizedBox(
+    height: MediaQuery.of(context).size.height * 0.2, // Set specific height
+    child: Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
         ),
-      ],
-    ),
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          // Profile Image
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.person,
-              color: Colors.white,
-              size: 30,
-            ),
-          ),
-          const SizedBox(width: 16),
-
-          // Info Section
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Ahmad Badawi',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Kudus',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '31-12-2024',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Detail Button
-          ElevatedButton(
-            onPressed: () {
-              // Aksi untuk tombol "Lihat Detail"
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF64B5F6), // Light blue
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: const Text(
-              'Lihat Detail',
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
           ),
         ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            const SizedBox(height: 8),
+            Expanded(
+              child: filteredBookingBelum.isEmpty
+                  ? const Center(
+                      child: Text(
+                        'Tidak ada pesanan dalam proses',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    )
+                  : ListView.separated(
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: filteredBookingBelum.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 16.0),
+                      itemBuilder: (context, index) {
+                        final pesanan = filteredBookingBelum[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF12215C),
+                            borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8.0,
+                            ),
+                            leading: const CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage('https://picsum.photos/200'),
+                              radius: 25,
+                            ),
+                            title: Text(
+                              pesanan.user.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 4),
+                                Text(
+                                  pesanan.field.name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  DateFormat('EEEE, d MMMM yyyy', 'id_ID')
+                                      .format(
+                                    DateTime.parse(
+                                        pesanan.booking.date.toString()),
+                                  ),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
       ),
     ),
   );

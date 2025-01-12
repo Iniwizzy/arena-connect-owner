@@ -46,10 +46,10 @@ class Payment {
   int userId;
   int bookingId;
   String totalPayment;
-  int paymentId;
+  int? paymentId;
   String status;
   String orderId;
-  String receipt;
+  String? receipt;
   Field field;
   Booking booking;
   User user;

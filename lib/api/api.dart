@@ -7,9 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arena_connect/customer/models/booking.dart' as booking;
 
-// const String baseUrl = 'http://localhost:8000/api';
-const String baseUrl = 'https://arenaconnect.site/api';
-const String imageUrl = 'https://arenaconnect.site/storage/receipts/';
+const String baseUrl = 'http://localhost:8000/api';
+const String imageUrl = 'https://localhost:8000/storage/receipts/';
+// const String baseUrl = 'https://arenaconnect.site/api';
+// const String imageUrl = 'https://arenaconnect.site/storage/receipts/';
 
 class ApiService {
   Future<Map<String, dynamic>> register(
@@ -730,6 +731,7 @@ class ApiService {
 
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
+
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         return {

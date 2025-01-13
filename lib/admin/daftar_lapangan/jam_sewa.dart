@@ -16,19 +16,19 @@ class _JamSewaPageState extends State<JamSewaPage> {
   final ApiService _apiService = ApiService();
   bool _isLoading = false;
   final Map<String, Map<String, TextEditingController>> jamControllers = {
-    'Sesi Pagi': {
+    'Pagi': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Siang': {
+    'Siang': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Sore': {
+    'Sore': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Malam': {
+    'Malam': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
@@ -40,10 +40,10 @@ class _JamSewaPageState extends State<JamSewaPage> {
     });
 
     try {
-      // Prepare the data
+      // Prepare the data without session information
       List<Map<String, dynamic>> schedules = [];
       
-      jamControllers.forEach((session, controllers) {
+      jamControllers.forEach((timeOfDay, controllers) {
         // Validate time format
         String startTime = _formatTimeInput(controllers['start']!.text);
         String endTime = _formatTimeInput(controllers['end']!.text);
@@ -53,19 +53,18 @@ class _JamSewaPageState extends State<JamSewaPage> {
         }
 
         schedules.add({
-          'session': session,
           'start_time': startTime,
           'end_time': endTime,
-          'price': int.parse(hargaControllers[session]!.text.replaceAll(RegExp(r'[^0-9]'), '')),
+          'price': int.parse(hargaControllers[timeOfDay]!.text.replaceAll(RegExp(r'[^0-9]'), '')),
         });
       });
 
       final result = await _apiService.saveFieldSchedules(
-        fieldId: widget.fieldId, // Use the passed field ID
+        fieldId: widget.fieldId,
         schedules: schedules,
       );
 
-      if (result['status'] == true) { // Updated to match API response
+      if (result['status'] == true) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Jadwal berhasil disimpan')),
@@ -113,17 +112,17 @@ class _JamSewaPageState extends State<JamSewaPage> {
   }
 
   final Map<String, IconData> kategoriIcons = {
-    'Sesi Pagi': Icons.wb_sunny_outlined, // Ikon untuk pagi
-    'Sesi Siang': Icons.sunny, // Ikon untuk siang
-    'Sesi Sore': Icons.sunny_snowing, // Ikon untuk sore
-    'Sesi Malam': Icons.nightlight_outlined, // Ikon untuk malam
+    'Pagi': Icons.wb_sunny_outlined,
+    'Siang': Icons.sunny,
+    'Sore': Icons.sunny_snowing,
+    'Malam': Icons.nightlight_outlined,
   };
 
   final Map<String, TextEditingController> hargaControllers = {
-    'Sesi Pagi': TextEditingController(),
-    'Sesi Siang': TextEditingController(),
-    'Sesi Sore': TextEditingController(),
-    'Sesi Malam': TextEditingController(),
+    'Pagi': TextEditingController(),
+    'Siang': TextEditingController(),
+    'Sore': TextEditingController(),
+    'Malam': TextEditingController(),
   };
 
   bool get allFieldsFilled {

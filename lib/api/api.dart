@@ -718,12 +718,13 @@ class ApiService {
       // Get today's date in YYYY-MM-DD format
       String today = DateTime.now().toString().split(' ')[0];
 
-      // Update schedules to include date and properly quote the session name
+      // Update schedules to include date without session name
       List<Map<String, dynamic>> updatedSchedules = schedules.map((schedule) {
         return {
-          ...schedule,
-          'session': '"${schedule['session']}"', // Properly quote the session name
-          'date': today, // Add today's date
+          'start_time': schedule['start_time'],
+          'end_time': schedule['end_time'],
+          'price': schedule['price'],
+          'date': today,
         };
       }).toList();
 

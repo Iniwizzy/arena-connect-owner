@@ -133,7 +133,7 @@ class _FinancialReportScreenState extends State<FinancialReportScreen> {
         groupTransactionsByMonth(filteredLaporanSelesai);
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1a237e),
+      backgroundColor: const Color(0xFF12215C),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(

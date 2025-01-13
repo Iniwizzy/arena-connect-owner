@@ -76,137 +76,146 @@ class _TambahRekeningPageState extends State<TambahRekeningPage> {
 
     // Update only the ElevatedButton onPressed handler
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF12215C),
-        titleSpacing: 0,
-        title: const Text(
-          "Tambah Rekening Bank",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF12215C),
+          titleSpacing: 0,
+          title: const Text(
+            "Tambah Rekening Bank",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 18,
+            ),
+            onPressed: () {
+              Navigator.pushNamed(context, '/profil');
+            },
           ),
         ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.white,
-            size: 18,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, '/profil');
-          },
-        ),
-      ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 16),
-                  _buildFormField(
-                    "Nama Lengkap",
-                    _namaController,
-                    TextInputType.name,
-                  ),
-                  const SizedBox(height: 10),
-                  _buildBankDropdown(),
-                  const SizedBox(height: 10),
-                  _buildFormField(
-                    "No. Rekening",
-                    _noRekeningController,
-                    TextInputType.number,
-                  ),
-                  const SizedBox(height: 16),
-                  const Divider(color: Colors.grey),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Atur Sebagai Rekening Utama",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Color(0xFF12215C),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isRekeningUtama = !_isRekeningUtama;
-                          });
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 200),
-                          width: 50,
-                          height: 28,
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: _isRekeningUtama
-                                ? const Color(0xFF489DD6)
-                                : const Color(0xFFE0E0E0),
-                            borderRadius: BorderRadius.circular(20),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
+                          _buildFormField(
+                            "Nama Lengkap",
+                            _namaController,
+                            TextInputType.name,
                           ),
-                          child: Row(
-                            mainAxisAlignment: _isRekeningUtama
-                                ? MainAxisAlignment.end
-                                : MainAxisAlignment.start,
+                          const SizedBox(height: 10),
+                          _buildBankDropdown(),
+                          const SizedBox(height: 10),
+                          _buildFormField(
+                            "No. Rekening",
+                            _noRekeningController,
+                            TextInputType.number,
+                          ),
+                          const SizedBox(height: 16),
+                          const Divider(color: Colors.grey),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CircleAvatar(
-                                radius: 10,
-                                backgroundColor: Colors.white,
+                              const Text(
+                                "Atur Sebagai Rekening Utama",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color(0xFF12215C),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _isRekeningUtama = !_isRekeningUtama;
+                                  });
+                                },
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  width: 50,
+                                  height: 28,
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: BoxDecoration(
+                                    color: _isRekeningUtama
+                                        ? const Color(0xFF489DD6)
+                                        : const Color(0xFFE0E0E0),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: _isRekeningUtama
+                                        ? MainAxisAlignment.end
+                                        : MainAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 10,
+                                        backgroundColor: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF489DD6),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        elevation: 5,
-                      ),
-                      onPressed: _isLoading ? null : _submitForm,
-                      child: _isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "SIMPAN",
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                          const SizedBox(height: 24),
+                          SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF489DD6),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
+                                elevation: 5,
                               ),
+                              onPressed: _isLoading ? null : _submitForm,
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white)
+                                  : const Text(
+                                      "SIMPAN",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                             ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+                if (_isLoading)
+                  Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
             ),
           ),
-          if (_isLoading)
-            Container(
-              color: Colors.black.withOpacity(0.3),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-        ],
-      ),
-    );
+        ));
   }
 
   // Existing _buildFormField and _buildBankDropdown methods remain the same...

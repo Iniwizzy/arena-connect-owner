@@ -1,46 +1,128 @@
 import 'package:arena_connect/admin/config/theme.dart';
+import 'package:arena_connect/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class JamSewaPage extends StatefulWidget {
-  const JamSewaPage({super.key});
+  final String fieldId; // Add field ID parameter
+
+  const JamSewaPage({super.key, required this.fieldId}); // Update constructor
 
   @override
   _JamSewaPageState createState() => _JamSewaPageState();
 }
 
 class _JamSewaPageState extends State<JamSewaPage> {
+  final ApiService _apiService = ApiService();
+  bool _isLoading = false;
   final Map<String, Map<String, TextEditingController>> jamControllers = {
-    'Sesi Pagi': {
+    'Pagi': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Siang': {
+    'Siang': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Sore': {
+    'Sore': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
-    'Sesi Malam': {
+    'Malam': {
       'start': TextEditingController(),
       'end': TextEditingController()
     },
   };
 
+  Future<void> _saveSchedules() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Prepare the data without session information
+      List<Map<String, dynamic>> schedules = [];
+      
+      jamControllers.forEach((timeOfDay, controllers) {
+        // Validate time format
+        String startTime = _formatTimeInput(controllers['start']!.text);
+        String endTime = _formatTimeInput(controllers['end']!.text);
+        
+        if (startTime.isEmpty || endTime.isEmpty) {
+          throw Exception('Format waktu tidak valid. Gunakan format HH:mm');
+        }
+
+        schedules.add({
+          'start_time': startTime,
+          'end_time': endTime,
+          'price': int.parse(hargaControllers[timeOfDay]!.text.replaceAll(RegExp(r'[^0-9]'), '')),
+        });
+      });
+
+      final result = await _apiService.saveFieldSchedules(
+        fieldId: widget.fieldId,
+        schedules: schedules,
+      );
+
+      if (result['status'] == true) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Jadwal berhasil disimpan')),
+        );
+        Navigator.pop(context);
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message'] ?? 'Gagal menyimpan jadwal')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Helper method to format time input
+  String _formatTimeInput(String input) {
+    // Remove any non-digit characters
+    String digits = input.replaceAll(RegExp(r'[^0-9:]'), '');
+    
+    // If input contains colon, validate the format
+    if (digits.contains(':')) {
+      List<String> parts = digits.split(':');
+      if (parts.length == 2) {
+        int? hours = int.tryParse(parts[0]);
+        int? minutes = int.tryParse(parts[1]);
+        
+        if (hours != null && minutes != null && 
+            hours >= 0 && hours < 24 && 
+            minutes >= 0 && minutes < 60) {
+          return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+        }
+      }
+    }
+    
+    return '';
+  }
+
   final Map<String, IconData> kategoriIcons = {
-    'Sesi Pagi': Icons.wb_sunny_outlined, // Ikon untuk pagi
-    'Sesi Siang': Icons.sunny, // Ikon untuk siang
-    'Sesi Sore': Icons.sunny_snowing, // Ikon untuk sore
-    'Sesi Malam': Icons.nightlight_outlined, // Ikon untuk malam
+    'Pagi': Icons.wb_sunny_outlined,
+    'Siang': Icons.sunny,
+    'Sore': Icons.sunny_snowing,
+    'Malam': Icons.nightlight_outlined,
   };
 
   final Map<String, TextEditingController> hargaControllers = {
-    'Sesi Pagi': TextEditingController(),
-    'Sesi Siang': TextEditingController(),
-    'Sesi Sore': TextEditingController(),
-    'Sesi Malam': TextEditingController(),
+    'Pagi': TextEditingController(),
+    'Siang': TextEditingController(),
+    'Sore': TextEditingController(),
+    'Malam': TextEditingController(),
   };
 
   bool get allFieldsFilled {
@@ -234,12 +316,13 @@ class _JamSewaPageState extends State<JamSewaPage> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: allFieldsFilled ? () {} : null,
-              child: Text(
-                'Simpan',
-                style:
-                    regulerFontSelected1.copyWith(fontWeight: FontWeight.w600),
-              ),
+              onPressed: allFieldsFilled ? (_isLoading ? null : _saveSchedules) : null,
+              child: _isLoading 
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                    'Simpan',
+                    style: regulerFontSelected1.copyWith(fontWeight: FontWeight.w600),
+                  ),
             ),
           )
         ],

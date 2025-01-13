@@ -1,8 +1,42 @@
 import 'package:arena_connect/customer/config/theme.dart';
 import 'package:arena_connect/customer/screens/history/history_detail.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:arena_connect/api/api.dart';
 
-class HistoryScreen extends StatelessWidget {
+class HistoryScreen extends StatefulWidget {
+  @override
+  State<HistoryScreen> createState() => _HistoryScreenState();
+}
+
+class _HistoryScreenState extends State<HistoryScreen> {
+  List<dynamic> payments = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPayments();
+    initializeDateFormatting('id_ID', null);
+  }
+
+  Future<void> fetchPayments() async {
+    final response = await ApiService().getPaymentsByUser();
+    if (response['success']) {
+      setState(() {
+        payments = response['data'];
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      // Handle error
+      print(response['errors']);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,63 +51,39 @@ class HistoryScreen extends StatelessWidget {
         ),
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: ListView(
-                children: [
-                  buildSimpleCard(
-                    context: context,
-                    title: "GOR DIPONEGORO ",
-                    icon: Icons.sports_soccer,
-                    level: "Futsal",
-                    dateTime: "Min, 23 Sep 2024, 08.00-09.00",
-                    location: "Lapangan Badminton 2A Diponegoro",
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : payments.isEmpty
+              ? Center(
+                  child:
+                      Text('Belum ada history pembayaran', style: superFont3),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: ListView.builder(
+                    itemCount: payments.length,
+                    itemBuilder: (context, index) {
+                      final payment = payments[index];
+                      return buildPaymentCard(context, payment);
+                    },
                   ),
-                  const SizedBox(height: 16),
-                  buildSimpleCard(
-                    context: context,
-                    title: "GOR LOMBA TRI JUANG ",
-                    icon: Icons.sports_tennis,
-                    level: "Badminton",
-                    dateTime: "Jum, 5 Dec 2024, 09.00-10.00",
-                    location: "Lapangan Lomba Tri juang 2A",
-                    navigateToDetails: true,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+                ),
     );
   }
 
-  Widget buildSimpleCard({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required String level,
-    required String dateTime,
-    required String location,
-    bool navigateToDetails = false,
-  }) {
+  Widget buildPaymentCard(BuildContext context, dynamic payment) {
     return InkWell(
-      onTap: navigateToDetails
-          ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HistoryDetail(),
-                ),
-              );
-            }
-          : null,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => HistoryDetail(payment: payment),
+          ),
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(20),
+        margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
           border: Border.all(color: const Color(0xFF12215C), width: 2.8),
           borderRadius: BorderRadius.circular(20),
@@ -94,7 +104,7 @@ class HistoryScreen extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    title,
+                    payment['field']['field_centre']['name'],
                     style: superFont3,
                   ),
                 ),
@@ -104,9 +114,20 @@ class HistoryScreen extends StatelessWidget {
             Row(
               children: [
                 const SizedBox(width: 20),
-                Icon(icon, size: 18, color: const Color(0xFF12215C)),
+                const Icon(Icons.sports_soccer,
+                    size: 18, color: Color(0xFF12215C)),
                 const SizedBox(width: 6),
-                Text(level, style: superFont4),
+                Text(payment['field']['name'], style: superFont4),
+              ],
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                const SizedBox(width: 20),
+                const Icon(Icons.receipt_long_outlined,
+                    size: 18, color: Color(0xFF12215C)),
+                const SizedBox(width: 6),
+                Text(payment['order_id'], style: superFont4),
               ],
             ),
             const SizedBox(height: 10),
@@ -116,17 +137,31 @@ class HistoryScreen extends StatelessWidget {
                 const Icon(Icons.calendar_today,
                     size: 18, color: Color(0xFF12215C)),
                 const SizedBox(width: 6),
-                Text(dateTime, style: superFont4),
+                Text(
+                    DateFormat('EEEE, d MMMM yyyy', 'id_ID')
+                        .format(DateTime.parse(payment['booking']['date'])),
+                    style: superFont4),
               ],
             ),
             const SizedBox(height: 10),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(width: 20),
-                const Icon(Icons.location_on_outlined,
-                    size: 18, color: Color(0xFF12215C)),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 18,
+                  color: Color(0xFF12215C),
+                ),
                 const SizedBox(width: 6),
-                Text(location, style: superFont4),
+                Expanded(
+                  child: Text(
+                    payment['field']['field_centre']['address'],
+                    style: superFont4,
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 2),

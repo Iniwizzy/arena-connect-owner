@@ -64,6 +64,13 @@ class _PembayaranState extends State<Pembayaran> {
     ));
   }
 
+  void _onBankSelected(int bankId) {
+    setState(() {
+      selectedBankId = bankId;
+      debugPrint('Metode pembayaran dipilih: $selectedBankId');
+    });
+  }
+
   Widget buildCircleIcon(IconData icon, String label,
       {Color? backgroundColor, Color? iconColor = Colors.white}) {
     return Column(mainAxisSize: MainAxisSize.min, children: [
@@ -211,7 +218,7 @@ class _PembayaranState extends State<Pembayaran> {
                         style: regulerFont7,
                       ),
                       Text(
-                        "Rp.${widget.totalPayment}",
+                        "Rp${widget.totalPayment}",
                         style: superFont2,
                       ),
                     ],
@@ -234,13 +241,13 @@ class _PembayaranState extends State<Pembayaran> {
           ),
           const SizedBox(height: 10.0),
           Positioned(
-            top: 340,
+            top: 300,
             left: 8,
             right: 8,
             child: FractionallySizedBox(
               widthFactor: 0.95,
               child: Container(
-                height: 200, // Adjust height as needed
+                height: 200,
                 child: ListView.builder(
                   itemCount: banks.length,
                   itemBuilder: (context, index) {
@@ -289,11 +296,11 @@ class _PembayaranState extends State<Pembayaran> {
                                 groupValue: selectedBankId,
                                 activeColor: const Color(0xFF12215c),
                                 onChanged: (int? value) {
-                                  setState(() {
-                                    selectedBankId = value;
-                                    bayar = bank.bankName;
-                                    showSnackbar();
-                                  });
+                                  if (value != null) {
+                                    _onBankSelected(value);
+                                  }
+                                  bayar = bank.bankName;
+                                  showSnackbar();
                                 },
                               ),
                             ),
@@ -345,15 +352,17 @@ class _PembayaranState extends State<Pembayaran> {
                             return;
                           }
 
+                          debugPrint(
+                              'ID Pembayaran yang Dipilih: ${selectedBankId!.toInt()}');
+
                           var response = await ApiService().updatePayment(
-                            // paymentId: widget.paymentId,
+                            paymentId: widget.paymentId,
                             userId: widget.bookingData.userId,
                             bookingId: widget.bookingData.id,
                             totalPayment: widget.totalPayment.toString(),
                             status: 'Proses',
                             orderId: widget.orderId,
-                            paymentId:
-                                selectedBankId!, // Use selectedBankId here
+                            bankId: selectedBankId!.toInt(),
                           );
 
                           if (response['success']) {
@@ -373,6 +382,8 @@ class _PembayaranState extends State<Pembayaran> {
                                   totalPayment: widget.totalPayment,
                                   bookingData: widget.bookingData,
                                   orderId: widget.orderId,
+                                  bankId: selectedBankId!,
+                                  banks: banks,
                                 ),
                               ),
                             );

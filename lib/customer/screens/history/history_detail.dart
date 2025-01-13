@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
-// Color Palettes
-Color primary = const Color(0xFF12215C);
-Color tertiary = const Color(0xFFA7ADC3);
-Color white = const Color(0xFFFFFFFF);
+import 'package:arena_connect/customer/config/theme.dart';
+import 'package:intl/intl.dart';
 
 class HistoryDetail extends StatefulWidget {
+  final dynamic payment;
+  const HistoryDetail({super.key, required this.payment});
+
   @override
   _HistoryDetailState createState() => _HistoryDetailState();
 }
@@ -19,14 +19,23 @@ class _HistoryDetailState extends State<HistoryDetail> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Terima Kasih!'),
-          content: const Text('Terima kasih atas rating anda!'),
+          title: Text(
+            'Terima Kasih!',
+            style: superFont2,
+          ),
+          content: Text(
+            'Terima kasih atas rating Anda!',
+            style: superFont4,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Close'),
+              child: Text(
+                'Tutup',
+                style: superFont4.copyWith(color: primary),
+              ),
             ),
           ],
         );
@@ -58,32 +67,23 @@ class _HistoryDetailState extends State<HistoryDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final payment = widget.payment;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'History Pembayaran',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: white,
-          ),
+          style: superFont1.copyWith(color: Colors.white),
         ),
         backgroundColor: primary,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: white), // Ikon back
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
-            Navigator.of(context).pop(); // Aksi kembali
+            Navigator.of(context).pop();
           },
         ),
-        leadingWidth: 20, // Atur lebar area leading agar lebih kecil
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(6.0),
-          child: Container(
-            height: 4.0,
-          ),
-        ),
       ),
-            body: Column(
+      body: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(16.0),
@@ -92,20 +92,13 @@ class _HistoryDetailState extends State<HistoryDetail> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'GOR LOMBA TRI JUANG',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    payment['field']['field_centre']['name'],
+                    style: superFont1,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Lapangan Lomba Tri Juang 2A',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: primary,
-                    ),
+                    payment['field']['name'],
+                    style: superFont3.copyWith(color: primary),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -118,7 +111,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 8),
                   Card(
                     elevation: 5,
                     child: Padding(
@@ -126,15 +119,55 @@ class _HistoryDetailState extends State<HistoryDetail> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          // Row(
+                          //   children: [
+                          //     Icon(Icons.scoreboard_outlined, color: primary),
+                          //     const SizedBox(width: 10),
+                          //     Text(
+                          //       payment['field']['name'],
+                          //       style: superFont3,
+                          //     ),
+                          //   ],
+                          // ),
+                          // const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Icon(Icons.sports_tennis),
+                              Icon(Icons.receipt_long_outlined, color: primary),
                               const SizedBox(width: 10),
                               Text(
-                                'Badminton',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
+                                'Order ID: ${payment['order_id']}',
+                                style: superFont3,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_month_outlined,
+                                  color: primary),
+                              const SizedBox(width: 10),
+                              Text(
+                                '${DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(DateTime.parse(payment['booking']['date']))}\n' +
+                                    payment['booking']['booking_start']
+                                        .substring(0, 5) +
+                                    ' - ' +
+                                    payment['booking']['booking_end']
+                                        .substring(0, 5),
+                                style: superFont4,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(Icons.location_on_outlined, color: primary),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  payment['field']['field_centre']['address'],
+                                  style: superFont4,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
                                 ),
                               ),
                             ],
@@ -142,40 +175,52 @@ class _HistoryDetailState extends State<HistoryDetail> {
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Icon(Icons.calendar_today),
+                              Icon(Icons.monetization_on_outlined,
+                                  color: primary),
                               const SizedBox(width: 10),
                               Text(
-                                'Jum, 5 Dec 2024\n09:00 - 10:00',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
+                                'Biaya: Rp${NumberFormat.decimalPattern('id').format(double.parse(payment['total_payment']))}',
+                                style: superFont4,
+                              )
                             ],
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Icon(Icons.location_on),
+                              Icon(Icons.loop, color: primary),
                               const SizedBox(width: 10),
                               Text(
-                                'Jl. Tri Lomba Juang, Mugassari',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ),
+                                'Status: ${payment['status']}',
+                                style: superFont4,
+                              )
                             ],
                           ),
                           const SizedBox(height: 10),
                           Row(
                             children: [
-                              const Icon(Icons.monetization_on),
+                              Icon(Icons.account_circle_outlined,
+                                  color: primary),
                               const SizedBox(width: 10),
                               Text(
-                                'Biaya: 26.000',
-                                style: TextStyle(
-                                  fontSize: 16,
+                                'Dibooking oleh: ${payment['user']['name']}',
+                                style: superFont4,
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(Icons.account_balance_wallet_outlined,
+                                  color: primary),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Text(
+                                  'Metode Pembayaran: ${payment['bank']['bank_name']} - ${payment['bank']['account_number']}',
+                                  style: superFont4,
+                                  softWrap: true,
+                                  overflow: TextOverflow.visible,
                                 ),
-                              ),
+                              )
                             ],
                           ),
                         ],
@@ -185,10 +230,7 @@ class _HistoryDetailState extends State<HistoryDetail> {
                   const SizedBox(height: 20),
                   Text(
                     'Bagaimana Pengalamanmu?',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: superFont1,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

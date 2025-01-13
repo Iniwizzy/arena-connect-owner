@@ -1,5 +1,6 @@
 import 'package:arena_connect/customer/screens/edit_password/kode_otp.dart';
 import 'package:flutter/material.dart';
+import 'package:arena_connect/customer/config/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -45,14 +46,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF192C6B), // warna biru tua
+        backgroundColor: const Color(0xFF12215C),
         elevation: 0,
         title: Text(
           'Ubah Password',
-          style: TextStyle(color: Colors.white),
+          style: superFont1.copyWith(color: Colors.white),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
           onPressed: () {
             // Navigasi kembali
             Navigator.pop(context);
@@ -66,14 +67,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Masukkan email anda',
+              'Masukkan email Anda',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black54,
-              ),
+              style: superFont2,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             TextField(
               controller: emailController,
               decoration: InputDecoration(
@@ -81,10 +79,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 15.0),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 15.0),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: isButtonEnabled
                   ? () {
@@ -97,17 +95,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: isButtonEnabled
-                    ? Color(0xFF57B1EB) // Warna biru muda jika aktif
-                    : Color(0xFFADB5BD), // Abu-abu jika tidak aktif
-                padding: EdgeInsets.symmetric(vertical: 15.0),
+                    ? const Color(0xFF57B1EB) // Warna biru muda jika aktif
+                    : const Color(0xFFADB5BD), // Abu-abu jika tidak aktif
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
               child: Text(
                 'Kirim Kode OTP',
-                style: TextStyle(
-                  fontSize: 16.0,
+                style: superFont3.copyWith(
                   color: Colors.white,
                 ),
               ),

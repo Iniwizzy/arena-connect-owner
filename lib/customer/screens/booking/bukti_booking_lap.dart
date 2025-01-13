@@ -9,6 +9,8 @@ import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BuktiBookingLapangan extends StatefulWidget {
   final int paymentId;
@@ -55,29 +57,56 @@ class _BuktiBookingLapanganState extends State<BuktiBookingLapangan> {
   }
 
   Future<void> downloadScreenshot() async {
-    final directory = (await getApplicationDocumentsDirectory()).path;
-    final fileName = 'bukti_booking_${paymentData?['order_id']}.png';
-    final filePath = '$directory/$fileName';
-
-    screenshotController.capture().then((Uint8List? image) {
-      if (image != null) {
-        File(filePath).writeAsBytes(image).then((File file) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Bukti booking berhasil diunduh: $filePath'),
-              backgroundColor: Colors.green,
-            ),
-          );
-        });
+    try {
+      if (Platform.isAndroid) {
+        var status = await Permission.manageExternalStorage.status;
+        if (status.isDenied) {
+          status = await Permission.manageExternalStorage.request();
+          if (status.isDenied) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                    'Silakan berikan izin penyimpanan di pengaturan aplikasi'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 3),
+              ),
+            );
+            await Permission.manageExternalStorage.request();
+            return;
+          }
+        }
       }
-    }).catchError((onError) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Gagal mengunduh bukti booking: $onError'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    });
+
+      Uint8List? image = await screenshotController.capture();
+      if (image == null) throw 'Failed to capture screenshot';
+
+      final now = DateFormat('ddMMyyyy_HHmmss').format(DateTime.now());
+      final orderId = paymentData?['order_id'] ?? 'unknown';
+      final directory = Directory('/storage/emulated/0/DCIM/Downloads');
+      if (!await directory.exists()) {
+        await directory.create(recursive: true);
+      }
+      final filePath = '${directory.path}/bukti_booking_${orderId}_$now.png';
+      await File(filePath).writeAsBytes(image);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Bukti booking berhasil diunduh'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal mengunduh bukti booking: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -175,11 +204,32 @@ class _BuktiBookingLapanganState extends State<BuktiBookingLapangan> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              'Order ID',
+                                              'Order ID:',
                                               style: regulerFont1,
                                             ),
                                             Text(
                                               paymentData?['order_id'] ?? '',
+                                              style: regulerFont1,
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              'Metode Pembayaran:',
+                                              style: regulerFont1,
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              '${paymentData?['bank']['bank_name'] ?? ''} - ${paymentData?['bank']['account_number'] ?? ''}',
                                               style: regulerFont1,
                                             ),
                                           ],
@@ -204,32 +254,21 @@ class _BuktiBookingLapanganState extends State<BuktiBookingLapangan> {
                                                   'Pelaksanaan',
                                                   style: superFont3,
                                                 ),
-                                                const SizedBox(height: 5),
+                                                const SizedBox(height: 18),
                                                 Text(
-                                                  paymentData?['field']
-                                                              ['field_centre']
-                                                          ['name'] ??
-                                                      '',
+                                                  'Nama GOR: ${paymentData?['field']['field_centre']['name'] ?? ''}',
                                                   style: regulerFont1.copyWith(
                                                       color: secondary),
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Text(
-                                                  paymentData?['field']
-                                                          ['name'] ??
-                                                      '',
+                                                  'Lapangan: ${paymentData?['field']['name'] ?? ''}',
                                                   style: regulerFont1.copyWith(
                                                       color: secondary),
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Text(
-                                                  DateFormat('EEEE, d MMMM yyyy',
-                                                              'id_ID')
-                                                          .format(DateTime.parse(
-                                                              paymentData?[
-                                                                      'booking']
-                                                                  ['date'])) ??
-                                                      '',
+                                                  'Tanggal: ${DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(DateTime.parse(paymentData?['booking']['date'])) ?? ''}',
                                                   style: regulerFont1.copyWith(
                                                       color: secondary),
                                                 ),

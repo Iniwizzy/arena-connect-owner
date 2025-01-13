@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:arena_connect/customer/models/res_bank.dart';
 import 'package:arena_connect/customer/screens/booking/bukti_booking_lap.dart';
 import 'package:arena_connect/customer/screens/booking/pembayaran.dart';
 import 'package:arena_connect/customer/screens/field-search/select_schedule.dart';
@@ -16,6 +17,8 @@ class PaymentScreen extends StatefulWidget {
   final int totalPayment;
   final BookingData bookingData;
   final String orderId;
+  final int bankId;
+  final List<Bank> banks;
 
   const PaymentScreen({
     super.key,
@@ -23,6 +26,8 @@ class PaymentScreen extends StatefulWidget {
     required this.totalPayment,
     required this.bookingData,
     required this.orderId,
+    required this.bankId,
+    required this.banks,
   });
 
   @override
@@ -33,8 +38,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
   File? receipt;
   bool isUploading = false;
   bool isUploadButtonEnabled = true;
-  Duration _remainingTime = const Duration(minutes: 1, seconds: 0);
+  Duration _remainingTime = const Duration(minutes: 60, seconds: 0);
   Timer? _timer;
+
+  String getBankName(int bankId) {
+    final bank = widget.banks.firstWhere((bank) => bank.id == bankId,
+        orElse: () => Bank(
+            id: 0,
+            userId: 0,
+            bankName: "Unknown",
+            accountNumber: "",
+            fieldCentreId: 0,
+            createdAt: null,
+            updatedAt: null));
+    return '${bank.bankName} - ${bank.accountNumber}';
+  }
 
   Future<void> rejectPayment() async {
     var response = await ApiService().updatePayment(
@@ -44,6 +62,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       totalPayment: widget.totalPayment.toString(),
       status: 'Ditolak',
       orderId: widget.orderId,
+      bankId: widget.bankId,
     );
 
     if (response['success']) {
@@ -113,6 +132,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     var response = await ApiService().uploadReceipt(
       paymentId: widget.paymentId,
+      bankId: widget.bankId,
       userId: widget.bookingData.userId,
       bookingId: widget.bookingData.id,
       totalPayment: widget.totalPayment.toString(),
@@ -197,276 +217,281 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'images/top-wave-cropped.png',
-              fit: BoxFit.fitWidth,
-            ),
-          ),
-          Column(
+    return SingleChildScrollView(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Scaffold(
+          body: Stack(
             children: [
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Pembayaran(
-                                paymentId: widget.paymentId,
-                                totalPayment: widget.totalPayment,
-                                bookingData: widget.bookingData,
-                                orderId: widget.orderId),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.arrow_back),
-                      color: white,
-                    ),
-                  ),
-                ],
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Image.asset(
+                  'images/top-wave-cropped.png',
+                  fit: BoxFit.fitWidth,
+                ),
               ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
                 children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(left: 40),
-                        child: buildCircleIcon(
-                            Icons.calendar_month_outlined, "Pilih Jadwal"),
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: CustomPaint(
-                      painter: DashedLinePainter(),
-                    ),
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(0),
-                        child: buildCircleIcon(
-                          Icons.list_alt_rounded,
-                          "Detail Booking",
-                          backgroundColor: primary,
-                          iconColor: white,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20, top: 20),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Pembayaran(
+                                    paymentId: widget.paymentId,
+                                    totalPayment: widget.totalPayment,
+                                    bookingData: widget.bookingData,
+                                    orderId: widget.orderId),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.arrow_back),
+                          color: white,
                         ),
                       ),
                     ],
                   ),
-                  Expanded(
-                    child: CustomPaint(
-                      painter: DashedLinePainter(),
-                    ),
-                  ),
-                  Column(
+                  const SizedBox(height: 15),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.only(right: 40),
-                        child: buildCircleIcon(
-                            Icons.payments_outlined, "Pembayaran",
-                            backgroundColor: white, iconColor: primary),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 40),
+                            child: buildCircleIcon(
+                                Icons.calendar_month_outlined, "Pilih Jadwal"),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: CustomPaint(
+                          painter: DashedLinePainter(),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(0),
+                            child: buildCircleIcon(
+                              Icons.list_alt_rounded,
+                              "Detail Booking",
+                              backgroundColor: primary,
+                              iconColor: white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Expanded(
+                        child: CustomPaint(
+                          painter: DashedLinePainter(),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(right: 40),
+                            child: buildCircleIcon(
+                                Icons.payments_outlined, "Pembayaran",
+                                backgroundColor: white, iconColor: primary),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ),
-          Positioned(
-            top: 185,
-            left: 8,
-            right: 8,
-            child: Column(
-              children: [
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  padding: const EdgeInsets.all(30),
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Menunggu Pembayaran',
-                            style: superFont2,
+              Positioned(
+                top: 185,
+                left: 8,
+                right: 8,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20),
+                      padding: const EdgeInsets.all(30),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
                           ),
-                          Icon(Icons.access_time, color: primary),
                         ],
                       ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Selesaikan pembayaran sebelum',
-                            style: regulerFont1.copyWith(
-                                color: secondary, fontSize: 12),
-                          ),
-                          Stack(
-                            alignment: Alignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 10),
-                                decoration: BoxDecoration(
-                                  color: const Color(0XFFA8E911),
-                                  borderRadius: BorderRadius.circular(10),
+                              Text(
+                                'Menunggu Pembayaran',
+                                style: superFont2,
+                              ),
+                              Icon(Icons.access_time, color: primary),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Selesaikan pembayaran sebelum',
+                                style: regulerFont1.copyWith(
+                                    color: secondary, fontSize: 12),
+                              ),
+                              Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 40, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0XFFA8E911),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  Text(
+                                    '${_remainingTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${_remainingTime.inSeconds.remainder(60).toString().padLeft(2, '0')}',
+                                    style:
+                                        regulerFont1.copyWith(color: primary),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 25),
+                          CustomPaint(
+                            painter:
+                                DashedLinePainter(color: Colors.grey.shade400),
+                            size: Size(MediaQuery.of(context).size.width, 1),
+                          ),
+                          const SizedBox(height: 15),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 15,
+                              horizontal: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  blurRadius: 4,
+                                  offset: const Offset(0, 5),
                                 ),
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const SizedBox(width: 0),
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'BAYAR MELALUI: ${getBankName(widget.bankId)}',
+                                      style: superFont4,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Order ID: ${widget.orderId}',
+                                      style: regulerFont1.copyWith(
+                                          color: secondary, fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Total Pembayaran',
+                                style: superFont3.copyWith(color: primary),
                               ),
                               Text(
-                                '${_remainingTime.inMinutes.remainder(60).toString().padLeft(2, '0')}:${_remainingTime.inSeconds.remainder(60).toString().padLeft(2, '0')}',
-                                style: regulerFont1.copyWith(color: primary),
+                                'Rp${widget.totalPayment}',
+                                style: superFont2.copyWith(color: primary),
                               ),
                             ],
                           ),
                         ],
                       ),
-                      const SizedBox(height: 25),
-                      CustomPaint(
-                        painter: DashedLinePainter(color: Colors.grey.shade400),
-                        size: Size(MediaQuery.of(context).size.width, 1),
-                      ),
-                      const SizedBox(height: 15),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 15,
-                          horizontal: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade300,
-                              blurRadius: 4,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const SizedBox(width: 0),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'BAYAR MELALUI',
-                                  style: superFont3,
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  'Order ID: ${widget.orderId}',
-                                  style: regulerFont1.copyWith(
-                                      color: secondary, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Total Pembayaran',
-                            style: superFont3.copyWith(color: primary),
-                          ),
-                          Text(
-                            'Rp.${widget.totalPayment}',
-                            style: superFont2.copyWith(color: primary),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                top: 485,
+                left: 8,
+                right: 8,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20), // Margin lebih kecil
+                      padding: const EdgeInsets.all(17),
+                      decoration: BoxDecoration(
+                        color: white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.grey,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
                           ),
                         ],
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            top: 485,
-            left: 8,
-            right: 8,
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 20), // Margin lebih kecil
-                  padding: const EdgeInsets.all(17),
-                  decoration: BoxDecoration(
-                    color: white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Colors.grey,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Menampilkan gambar jika sudah dipilih
-                      if (image != null)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              bottom:
-                                  20), // Spasi antara gambar dan tombol kirim
-                          child: Image.file(
-                            image!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: 200, // Menjaga agar gambar proporsional
-                          ),
-                        ),
+                      child: Column(
+                        children: [
+                          // Menampilkan gambar jika sudah dipilih
+                          if (image != null)
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom:
+                                      20), // Spasi antara gambar dan tombol kirim
+                              child: Image.file(
+                                image!,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 200, // Menjaga agar gambar proporsional
+                              ),
+                            ),
 
-                      // Menampilkan tombol kirim jika gambar sudah dipilih
+                          // Menampilkan tombol kirim jika gambar sudah dipilih
 
-                      Container(
-                        margin: const EdgeInsets.only(
-                            top: 10), // Menambahkan jarak dari elemen atas
-                        alignment:
-                            Alignment.centerRight, // Posisi tombol di kanan
-                        child:
-                            image != null // Periksa apakah gambar sudah diinput
+                          Container(
+                            margin: const EdgeInsets.only(
+                                top: 10), // Menambahkan jarak dari elemen atas
+                            alignment:
+                                Alignment.centerRight, // Posisi tombol di kanan
+                            child: image !=
+                                    null // Periksa apakah gambar sudah diinput
                                 ? ElevatedButton.icon(
                                     onPressed: isUploadButtonEnabled
                                         ? () async {
@@ -490,34 +515,36 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     ),
                                   )
                                 : const SizedBox(),
-                      ),
+                          ),
 
-                      // Tombol upload hanya tampil jika gambar belum dipilih
-                      if (!imageSelected)
-                        Row(
-                          children: [
-                            IconButton(
-                              icon:
-                                  Icon(Icons.upload, color: primary, size: 27),
-                              onPressed: () async {
-                                await getImage(); // Pilih gambar
-                              },
+                          // Tombol upload hanya tampil jika gambar belum dipilih
+                          if (!imageSelected)
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.upload,
+                                      color: primary, size: 27),
+                                  onPressed: () async {
+                                    await getImage(); // Pilih gambar
+                                  },
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Text('Upload Bukti Pembayaran',
+                                      style: superFont2),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Text('Upload Bukti Pembayaran',
-                                  style: superFont2),
-                            ),
-                          ],
-                        ),
-                      const SizedBox(height: 10)
-                    ],
-                  ),
+                          const SizedBox(height: 10)
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

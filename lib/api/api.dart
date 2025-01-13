@@ -28,10 +28,13 @@ class ApiService {
 
     if (response.statusCode == 201) {
       final responseData = jsonDecode(response.body);
-      return {'success': true, 'data': ResUser.fromJson(responseData['data'])};
+      return {
+        'success': true,
+        'data': User.fromJson(responseData['data']),
+      };
     } else {
       final errorData = jsonDecode(response.body);
-      return {'success': false, 'errors': errorData['data']};
+      return {'success': false, 'errors': errorData['data'] ?? errorData};
     }
   }
 
@@ -495,6 +498,7 @@ class ApiService {
     required String totalPayment,
     required String status,
     required String orderId,
+    required int bankId,
     String? receipt,
   }) async {
     try {
@@ -515,7 +519,7 @@ class ApiService {
           "total_payment": totalPayment,
           "status": status,
           "order_id": orderId,
-          "payment_id": paymentId, // Add this field
+          "payment_id": bankId,
           "receipt": receipt,
         }),
       );
@@ -543,6 +547,7 @@ class ApiService {
     required String status,
     required String orderId,
     required String receiptPath,
+    required int bankId,
   }) async {
     try {
       String? token = await getToken();
@@ -560,6 +565,7 @@ class ApiService {
       request.fields['total_payment'] = int.parse(totalPayment).toString();
       request.fields['status'] = status;
       request.fields['order_id'] = orderId;
+      request.fields['payment_id'] = bankId.toString();
       request.files
           .add(await http.MultipartFile.fromPath('receipt', receiptPath));
 
@@ -609,6 +615,50 @@ class ApiService {
         };
       } else {
         final Map<String, dynamic> errorData = json.decode(response.body);
+        return {
+          'success': false,
+          'errors': errorData['message'] ?? 'Unknown error',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'errors': e.toString(),
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> getPaymentsByUser() async {
+    try {
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      final userProfileResponse = await getUserProfile(token);
+      if (!userProfileResponse['success']) {
+        throw Exception('Failed to get user profile');
+      }
+
+      int userId = userProfileResponse['data']['id'];
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/payments/user/$userId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        debugPrint('Payments: $responseData');
+        return {
+          'success': responseData['success'],
+          'data': responseData['data'],
+        };
+      } else {
+        final errorData = json.decode(response.body);
         return {
           'success': false,
           'errors': errorData['message'] ?? 'Unknown error',
@@ -698,6 +748,54 @@ class ApiService {
     } catch (e) {
       return {
         'success': false,
+        'message': 'Error: $e',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> saveFieldSchedules({
+    required String fieldId,
+    required List<Map<String, dynamic>> schedules,
+  }) async {
+    try {
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      // Get today's date in YYYY-MM-DD format
+      String today = DateTime.now().toString().split(' ')[0];
+
+      // Update schedules to include date without session name
+      List<Map<String, dynamic>> updatedSchedules = schedules.map((schedule) {
+        return {
+          'start_time': schedule['start_time'],
+          'end_time': schedule['end_time'],
+          'price': schedule['price'],
+          'date': today,
+        };
+      }).toList();
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/field-schedules'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'field_id': fieldId,
+          'schedules': updatedSchedules,
+        }),
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      final data = jsonDecode(response.body);
+      return data;
+    } catch (e) {
+      return {
+        'status': false,
         'message': 'Error: $e',
       };
     }

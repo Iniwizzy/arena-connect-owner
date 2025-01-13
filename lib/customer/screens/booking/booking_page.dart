@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:arena_connect/customer/config/theme.dart';
 import 'package:arena_connect/customer/screens/field-search/select_schedule.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class BookingPage extends StatefulWidget {
   final int bookingId;
@@ -24,6 +25,7 @@ class _BookingPageState extends State<BookingPage> {
     super.initState();
     _isMounted = true;
     booking = ApiService().getBooking(widget.bookingId);
+    initializeDateFormatting('id_ID', null);
   }
 
   Widget buildCircleIcon(IconData icon, String label,
@@ -263,11 +265,15 @@ class _BookingPageState extends State<BookingPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              bookingData.field?.fieldCentre?.name ??
-                                  'Pusat Lapangan',
-                              style: superFont2.copyWith(
-                                color: const Color(0xFF12215c),
+                            Flexible(
+                              child: Text(
+                                bookingData.field?.fieldCentre?.name ??
+                                    'Pusat Lapangan',
+                                style: superFont2.copyWith(
+                                  color: const Color(0xFF12215c),
+                                ),
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -296,11 +302,15 @@ class _BookingPageState extends State<BookingPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 7),
-                                Text(
-                                  bookingData.field?.fieldCentre?.address ??
-                                      'Alamat Pusat Lapangan',
-                                  style: regulerFont4,
-                                )
+                                Flexible(
+                                  child: Text(
+                                    bookingData.field?.fieldCentre?.address ??
+                                        'Alamat Pusat Lapangan',
+                                    style: regulerFont4,
+                                    softWrap: true,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                               ],
                             ),
                           ],
@@ -378,7 +388,7 @@ class _BookingPageState extends State<BookingPage> {
                                       DateFormat('EEEE, d MMMM yyyy', 'id_ID')
                                           .format(
                                               DateTime.parse(bookingData.date)),
-                                      style: regulerFont4,
+                                      style: regulerFont3,
                                     )
                                   ],
                                 ),

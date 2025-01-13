@@ -7,6 +7,8 @@ import 'package:arena_connect/customer/screens/field-search/select_schedule.dart
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class FieldCenterDetails extends StatefulWidget {
   final int fieldCentreId;
@@ -14,6 +16,15 @@ class FieldCenterDetails extends StatefulWidget {
 
   @override
   FieldCenterState createState() => FieldCenterState();
+}
+
+Future<void> _launchURL(String url) async {
+  final Uri uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
+  }
 }
 
 class FieldCenterState extends State<FieldCenterDetails> {
@@ -349,10 +360,18 @@ class FieldCenterState extends State<FieldCenterDetails> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          fieldCentre?.maps ?? '',
-                          style: const TextStyle(
-                            fontSize: 10,
+                        InkWell(
+                          onTap: () {
+                            if (fieldCentre?.maps != null &&
+                                fieldCentre!.maps.isNotEmpty) {
+                              _launchURL(fieldCentre!.maps);
+                            }
+                          },
+                          child: Text(
+                            fieldCentre?.maps ?? '',
+                            style: const TextStyle(
+                              fontSize: 10,
+                            ),
                           ),
                         ),
                       ],
@@ -503,10 +522,12 @@ class FieldCenterState extends State<FieldCenterDetails> {
                                       : // Bullet point
                                       Expanded(
                                           child: Text(
-                                              fieldCentre?.descriptions ?? '',
-                                              style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: secondary)),
+                                            fieldCentre?.descriptions ?? '',
+                                            style: TextStyle(
+                                                fontSize: 12, color: secondary),
+                                            softWrap: true,
+                                            overflow: TextOverflow.visible,
+                                          ),
                                         ),
                                 ],
                               ),

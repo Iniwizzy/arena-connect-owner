@@ -8,9 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:arena_connect/customer/models/booking.dart' as booking;
 
 const String baseUrl = 'http://localhost:8000/api';
+const String imageUrl = 'https://localhost:8000/storage/receipts/';
 // const String baseUrl = 'https://arenaconnect.site/api';
 // const String imageUrl = 'https://arenaconnect.site/storage/receipts/';
-const String imageUrl = 'https://localhost:8000/storage/receipts/';
 
 class ApiService {
   Future<Map<String, dynamic>> register(
@@ -681,6 +681,7 @@ class ApiService {
 
       print('Response status code: ${response.statusCode}');
       print('Response body: ${response.body}');
+
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         return {
@@ -699,6 +700,53 @@ class ApiService {
     } catch (e) {
       return {
         'success': false,
+        'message': 'Error: $e',
+      };
+    }
+  }
+
+  Future<Map<String, dynamic>> saveFieldSchedules({
+    required String fieldId,
+    required List<Map<String, dynamic>> schedules,
+  }) async {
+    try {
+      String? token = await getToken();
+      if (token == null) {
+        throw Exception('Token not found');
+      }
+
+      // Get today's date in YYYY-MM-DD format
+      String today = DateTime.now().toString().split(' ')[0];
+
+      // Update schedules to include date and properly quote the session name
+      List<Map<String, dynamic>> updatedSchedules = schedules.map((schedule) {
+        return {
+          ...schedule,
+          'session': '"${schedule['session']}"', // Properly quote the session name
+          'date': today, // Add today's date
+        };
+      }).toList();
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/field-schedules'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'field_id': fieldId,
+          'schedules': updatedSchedules,
+        }),
+      );
+
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
+      final data = jsonDecode(response.body);
+      return data;
+    } catch (e) {
+      return {
+        'status': false,
         'message': 'Error: $e',
       };
     }

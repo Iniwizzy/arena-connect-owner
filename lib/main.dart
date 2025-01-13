@@ -77,7 +77,7 @@ class MainApp extends StatelessWidget {
         '/password': (context) => ChangePasswordScreen(),
         // '/deskpesanan': (context) => const DeskripsiPesanan(),
         '/desklapangan': (context) => FieldDescription(),
-        '/jamsewa': (context) => const JamSewaPage(),
+        '/jamsewa': (context) => const JamSewaPage(fieldId: '',),
         '/profil': (context) => const ProfilPage(),
         '/editprofil': (context) => const EditProfileScreen(),
         '/tambahakun': (context) => const TambahAkunScreen(),

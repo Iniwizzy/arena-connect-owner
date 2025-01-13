@@ -1,15 +1,20 @@
 import 'package:arena_connect/admin/config/theme.dart';
+import 'package:arena_connect/api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class JamSewaPage extends StatefulWidget {
-  const JamSewaPage({super.key});
+  final String fieldId; // Add field ID parameter
+
+  const JamSewaPage({super.key, required this.fieldId}); // Update constructor
 
   @override
   _JamSewaPageState createState() => _JamSewaPageState();
 }
 
 class _JamSewaPageState extends State<JamSewaPage> {
+  final ApiService _apiService = ApiService();
+  bool _isLoading = false;
   final Map<String, Map<String, TextEditingController>> jamControllers = {
     'Sesi Pagi': {
       'start': TextEditingController(),
@@ -28,6 +33,84 @@ class _JamSewaPageState extends State<JamSewaPage> {
       'end': TextEditingController()
     },
   };
+
+  Future<void> _saveSchedules() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Prepare the data
+      List<Map<String, dynamic>> schedules = [];
+      
+      jamControllers.forEach((session, controllers) {
+        // Validate time format
+        String startTime = _formatTimeInput(controllers['start']!.text);
+        String endTime = _formatTimeInput(controllers['end']!.text);
+        
+        if (startTime.isEmpty || endTime.isEmpty) {
+          throw Exception('Format waktu tidak valid. Gunakan format HH:mm');
+        }
+
+        schedules.add({
+          'session': session,
+          'start_time': startTime,
+          'end_time': endTime,
+          'price': int.parse(hargaControllers[session]!.text.replaceAll(RegExp(r'[^0-9]'), '')),
+        });
+      });
+
+      final result = await _apiService.saveFieldSchedules(
+        fieldId: widget.fieldId, // Use the passed field ID
+        schedules: schedules,
+      );
+
+      if (result['status'] == true) { // Updated to match API response
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Jadwal berhasil disimpan')),
+        );
+        Navigator.pop(context);
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(result['message'] ?? 'Gagal menyimpan jadwal')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi kesalahan: $e')),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Helper method to format time input
+  String _formatTimeInput(String input) {
+    // Remove any non-digit characters
+    String digits = input.replaceAll(RegExp(r'[^0-9:]'), '');
+    
+    // If input contains colon, validate the format
+    if (digits.contains(':')) {
+      List<String> parts = digits.split(':');
+      if (parts.length == 2) {
+        int? hours = int.tryParse(parts[0]);
+        int? minutes = int.tryParse(parts[1]);
+        
+        if (hours != null && minutes != null && 
+            hours >= 0 && hours < 24 && 
+            minutes >= 0 && minutes < 60) {
+          return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
+        }
+      }
+    }
+    
+    return '';
+  }
 
   final Map<String, IconData> kategoriIcons = {
     'Sesi Pagi': Icons.wb_sunny_outlined, // Ikon untuk pagi
@@ -234,12 +317,13 @@ class _JamSewaPageState extends State<JamSewaPage> {
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              onPressed: allFieldsFilled ? () {} : null,
-              child: Text(
-                'Simpan',
-                style:
-                    regulerFontSelected1.copyWith(fontWeight: FontWeight.w600),
-              ),
+              onPressed: allFieldsFilled ? (_isLoading ? null : _saveSchedules) : null,
+              child: _isLoading 
+                ? const CircularProgressIndicator(color: Colors.white)
+                : Text(
+                    'Simpan',
+                    style: regulerFontSelected1.copyWith(fontWeight: FontWeight.w600),
+                  ),
             ),
           )
         ],
